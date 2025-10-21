@@ -3,51 +3,114 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+const tintColorLight = "#0a7ea4";
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
+    background: "#FFFFFF",
+    surface: "#F8F8F8",
+    primary: "#00BFA5",
+    secondary: "#03DAC6",
+    accent: "#1DE9B6",
+    text: "#121212",
+    textSecondary: "#555555",
+    border: "#E0E0E0",
+    success: "#2ECC71",
+    warning: "#F1C40F",
+    error: "#E74C3C",
     tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
+    icon: "#687076",
+    tabIconDefault: "#687076",
     tabIconSelected: tintColorLight,
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    // Main palette
+    background: "#000000", // Fundo principal
+    surface: "#16181C", // Cards, superfícies elevadas
+    surfaceHover: "#1C1F23", // Estado hover de superfícies
+    border: "#2F3336", // Bordas, separadores
+
+    // Text colors
+    text: "#E7E9EA", // Texto principal
+    textPrimary: "#E7E9EA",
+    textSecondary: "#8B98A5",
+    textTertiary: "#5B6671",
+    disabled: "#3A3C40",
+
+    // Accent/action
+    accent: "#1D9BF0", // Botões primários, links
+    accentBlue: "#1D9BF0",
+    accentBlueHover: "#1A8CD8",
+    accentBlueLight: "rgba(29, 155, 240, 0.1)",
+    accentBlueLighter: "rgba(29, 155, 240, 0.05)",
+
+    // State
+    error: "#FF453A",
+    success: "#00BA7C",
+    disabledBG: "#0E0F10",
+
+    // Additional
+    plansBlue: "#00A8E8",
+    premiumGold: "#FFD700",
+    premiumOrange: "#FFA500",
+
+    // Chart colors
+    chart1: "#1D9BF0",
+    chart2: "#00BA7C",
+    chart3: "#F91880",
+    chart4: "#FFD400",
+    chart5: "#794BC4",
+
+    // Tab icons
+    icon: "#8B98A5",
+    tabIconDefault: "#8B98A5",
+    tabIconSelected: "#1D9BF0",
+
+    // Legacy/compat
+    tint: "#1D9BF0",
   },
 };
 
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
+    sans: "system-ui",
     /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
+    serif: "ui-serif",
     /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
+    rounded: "ui-rounded",
     /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
+    mono: "ui-monospace",
   },
   default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
+    sans: "normal",
+    serif: "serif",
+    rounded: "normal",
+    mono: "monospace",
   },
   web: {
     sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
     serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
+    rounded:
+      "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
     mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
 });
+
+export const typography = {
+  heading: { fontFamily: "Poppins-SemiBold", fontSize: 24, lineHeight: 32 },
+  subheading: { fontFamily: "Poppins-Medium", fontSize: 18, lineHeight: 24 },
+  body: { fontFamily: "Poppins-Regular", fontSize: 16, lineHeight: 22 },
+  caption: { fontFamily: "Poppins-Regular", fontSize: 13, lineHeight: 18 },
+};
+
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  xxl: 48,
+};
