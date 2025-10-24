@@ -5,11 +5,15 @@ import { ExternalLink } from "@/components/external-link";
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { Button } from "@/components/ui/button";
 import { Collapsible } from "@/components/ui/collapsible";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import { Fonts } from "@/constants/theme";
+import { Colors, Fonts } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export default function TabTwoScreen() {
+  const scheme = useColorScheme() ?? "light";
+  const C = Colors[scheme];
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
@@ -107,6 +111,74 @@ export default function TabTwoScreen() {
             </ThemedText>
           ),
         })}
+      </Collapsible>
+      <Collapsible title="Buttons">
+        <ThemedText style={{ marginBottom: 8 }}>Variants</ThemedText>
+        <ThemedView
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: 8,
+          }}
+        >
+          <Button label="Default" onPress={() => {}} />
+          <Button
+            variant="destructive"
+            label="Destructive"
+            onPress={() => {}}
+          />
+          <Button variant="outline" label="Outline" onPress={() => {}} />
+          <Button variant="secondary" label="Secondary" onPress={() => {}} />
+          <Button variant="ghost" label="Ghost" onPress={() => {}} />
+          <Button variant="link" label="Link" onPress={() => {}} />
+        </ThemedView>
+
+        <ThemedText style={{ marginVertical: 12 }}>Sizes</ThemedText>
+        <ThemedView
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
+          <Button size="sm" label="Small" onPress={() => {}} />
+          <Button label="Default" onPress={() => {}} />
+          <Button size="lg" label="Large" onPress={() => {}} />
+          <Button
+            size="icon"
+            accessibilityLabel="Favorite"
+            leftIcon={<IconSymbol name="heart.fill" size={18} color={C.text} />}
+            onPress={() => {}}
+          />
+        </ThemedView>
+
+        <ThemedText style={{ marginVertical: 12 }}>With icons</ThemedText>
+        <ThemedView style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
+          <Button
+            leftIcon={<IconSymbol name="sparkles" size={18} color="#FFFFFF" />}
+            rightIcon={
+              <IconSymbol name="chevron.right" size={18} color="#FFFFFF" />
+            }
+            label="Primary"
+            onPress={() => {}}
+          />
+          <Button
+            variant="outline"
+            leftIcon={<IconSymbol name="sparkles" size={18} color={C.text} />}
+            rightIcon={
+              <IconSymbol name="chevron.right" size={18} color={C.text} />
+            }
+            label="Outline"
+            onPress={() => {}}
+          />
+          <Button
+            disabled
+            leftIcon={<IconSymbol name="sparkles" size={18} color={C.text} />}
+            label="Disabled"
+            onPress={() => {}}
+          />
+        </ThemedView>
       </Collapsible>
     </ParallaxScrollView>
   );
