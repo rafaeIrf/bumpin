@@ -24,7 +24,7 @@ export default function WelcomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <View style={styles.content}>
-        <ThemedText type="title">Bem-vindo ao Tiviu</ThemedText>
+        <ThemedText type="title">Bem-vindo ao BumpIn</ThemedText>
         <ThemedText style={styles.subtitle}>
           Uma breve introdução do app pode ir aqui. Toque em Continuar para
           começar.
