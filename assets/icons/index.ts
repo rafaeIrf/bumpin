@@ -1,0 +1,30 @@
+// Auto-generated barrel export for SVG icons
+// Import and use like: import { BeerIcon, CoffeeIcon } from '@/assets/icons'
+
+export { default as ArrowLeftIcon } from "./arrow-left.svg";
+export { default as ArrowRightIcon } from "./arrow-right.svg";
+export { default as BeerIcon } from "./beer.svg";
+export { default as CalendarIcon } from "./calendar.svg";
+export { default as CheckIcon } from "./check.svg";
+export { default as CoffeeIcon } from "./coffee.svg";
+export { default as CompassIcon } from "./compass.svg";
+export { default as CrownIcon } from "./crown.svg";
+export { default as DumbbellIcon } from "./dumbbell.svg";
+export { default as EllipsisVerticalIcon } from "./ellipsis-vertical.svg";
+export { default as HeartIcon } from "./heart.svg";
+export { default as ListIcon } from "./list.svg";
+export { default as LockIcon } from "./lock.svg";
+export { default as LogOutIcon } from "./log-out.svg";
+export { default as MapPinIcon } from "./map-pin.svg";
+export { default as MapIcon } from "./map.svg";
+export { default as MessageCircleIcon } from "./message-circle.svg";
+export { default as MusicIcon } from "./music.svg";
+export { default as PencilIcon } from "./pencil.svg";
+export { default as SearchIcon } from "./search.svg";
+export { default as SettingsIcon } from "./settings.svg";
+export { default as ShoppingBagIcon } from "./shopping-bag.svg";
+export { default as SlidersHorizontalIcon } from "./sliders-horizontal.svg";
+export { default as StarIcon } from "./star.svg";
+export { default as UserRoundIcon } from "./user-round.svg";
+export { default as UtensilsCrossedIcon } from "./utensils-crossed.svg";
+export { default as XIcon } from "./x.svg";

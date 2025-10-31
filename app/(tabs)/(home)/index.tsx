@@ -1,12 +1,12 @@
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 
+import {
+  MapIcon,
+  MapPinIcon,
+  SearchIcon,
+  SlidersHorizontalIcon,
+} from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { HelloWave } from "@/components/hello-wave";
 import { PlaceCardCompact } from "@/components/place-card-compact";
@@ -15,8 +15,8 @@ import { PlaceCardLarge } from "@/components/place-card-large";
 import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { IconSymbol } from "@/components/ui/icon-symbol";
 import { typography } from "@/constants/theme";
+import { useThemeColors } from "@/hooks/use-theme-colors";
 import { getUserPosition } from "@/modules/places";
 import { getFeaturedPlaces, getNearbyPlaces } from "@/modules/places/api";
 import { Place, PlaceType } from "@/modules/places/types";
@@ -36,7 +36,7 @@ export default function HomeScreen() {
     latitude: number;
     longitude: number;
   } | null>(null);
-  const [viewMode, setViewMode] = useState<"list" | "map">("list");
+  const colors = useThemeColors();
 
   // Lista fixa de placeIds para a seção "Em Destaque"
   const featuredPlaceIds = [
@@ -101,25 +101,28 @@ export default function HomeScreen() {
       TopHeader={
         <ScreenToolbar
           leftAction={{
-            icon: "arrow.left",
+            icon: SlidersHorizontalIcon,
             onClick: () => {},
             ariaLabel: "Voltar",
+            color: colors.icon,
           }}
-          title="Lugares Próximos"
-          titleIcon="mappin.circle.fill"
-          showViewToggle
-          viewMode={viewMode}
-          onViewModeChange={(mode) => setViewMode(mode)}
-          viewToggleVariant="compact"
-          rightActions={
-            <Pressable>
-              <IconSymbol
-                name="slider.horizontal.3"
-                size={20}
-                color="#8B98A5"
-              />
-            </Pressable>
-          }
+          title="Explorar"
+          titleIcon={MapPinIcon}
+          titleIconColor={colors.accent}
+          rightActions={[
+            {
+              icon: MapIcon,
+              onClick: () => console.log("Filtros"),
+              ariaLabel: "Filtros",
+              color: colors.icon,
+            },
+            {
+              icon: SearchIcon,
+              onClick: () => console.log("Filtros"),
+              ariaLabel: "Filtros",
+              color: colors.icon,
+            },
+          ]}
         />
       }
       refreshing={refreshing}

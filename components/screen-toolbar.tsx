@@ -1,7 +1,6 @@
-import { IconSymbol } from "@/components/ui/icon-symbol";
 import { typography } from "@/constants/theme";
 import { BlurView } from "expo-blur";
-import { ReactNode } from "react";
+import { ComponentType } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   SharedValue,
@@ -10,11 +9,13 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import { SvgProps } from "react-native-svg";
 
 export interface ToolbarAction {
-  icon: string; // SF Symbol name
+  icon: ComponentType<SvgProps>; // SVG Icon component
   onClick: () => void;
   ariaLabel: string;
+  color?: string; // Optional color override
 }
 
 export type ViewMode = "list" | "map";
@@ -23,16 +24,9 @@ interface ScreenToolbarProps {
   // Basic toolbar props
   leftAction?: ToolbarAction;
   title: string;
-  titleIcon?: string; // SF Symbol name
-  rightActions?: ReactNode;
-
-  // View toggle props
-  showViewToggle?: boolean;
-  viewMode?: ViewMode;
-  onViewModeChange?: (mode: ViewMode) => void;
-  viewToggleVariant?: "default" | "compact";
-
-  // Scroll animation
+  titleIcon?: ComponentType<SvgProps>; // SVG Icon component
+  titleIconColor?: string;
+  rightActions?: ToolbarAction | ToolbarAction[]; // Single action or array
   scrollY?: SharedValue<number>;
 }
 
@@ -43,11 +37,8 @@ export function ScreenToolbar({
   leftAction,
   title,
   titleIcon,
+  titleIconColor = "#1D9BF0",
   rightActions,
-  showViewToggle = false,
-  viewMode = "list",
-  onViewModeChange,
-  viewToggleVariant = "compact",
   scrollY,
 }: ScreenToolbarProps) {
   const animatedBlurStyle = useAnimatedStyle(() => {
@@ -75,49 +66,22 @@ export function ScreenToolbar({
     };
   });
 
-  const renderViewToggle = () => {
-    if (!showViewToggle || !onViewModeChange) return null;
+  const renderRightActions = () => {
+    if (!rightActions) return null;
 
-    if (viewToggleVariant === "compact") {
-      return (
-        <>
-          <ViewToggleButton
-            mode="list"
-            currentMode={viewMode}
-            onPress={() => onViewModeChange("list")}
-            icon="list.bullet"
-            label="Vista em lista"
-            compact
-          />
-          <ViewToggleButton
-            mode="map"
-            currentMode={viewMode}
-            onPress={() => onViewModeChange("map")}
-            icon="map"
-            label="Vista em mapa"
-            compact
-          />
-        </>
-      );
-    }
+    const actions = Array.isArray(rightActions) ? rightActions : [rightActions];
 
-    // Default variant (full width buttons)
     return (
       <>
-        <ViewToggleButton
-          mode="list"
-          currentMode={viewMode}
-          onPress={() => onViewModeChange("list")}
-          icon="list.bullet"
-          label="Lista"
-        />
-        <ViewToggleButton
-          mode="map"
-          currentMode={viewMode}
-          onPress={() => onViewModeChange("map")}
-          icon="map"
-          label="Mapa"
-        />
+        {actions.map((action, index) => (
+          <ActionButton
+            key={`right-action-${index}`}
+            icon={action.icon}
+            onPress={action.onClick}
+            ariaLabel={action.ariaLabel}
+            color={action.color}
+          />
+        ))}
       </>
     );
   };
@@ -146,22 +110,24 @@ export function ScreenToolbar({
               icon={leftAction.icon}
               onPress={leftAction.onClick}
               ariaLabel={leftAction.ariaLabel}
+              color={leftAction.color}
             />
           )}
 
           {/* Title */}
           <View style={styles.titleContainer}>
-            {titleIcon && (
-              <IconSymbol name={titleIcon as any} size={20} color="#1D9BF0" />
-            )}
+            {titleIcon &&
+              (() => {
+                const TitleIcon = titleIcon;
+                return (
+                  <TitleIcon width={20} height={20} color={titleIconColor} />
+                );
+              })()}
             <Text style={styles.title}>{title}</Text>
           </View>
 
           {/* Right Actions */}
-          <View style={styles.rightActions}>
-            {renderViewToggle()}
-            {rightActions}
-          </View>
+          <View style={styles.rightActions}>{renderRightActions()}</View>
         </View>
       </View>
     </View>
@@ -169,13 +135,15 @@ export function ScreenToolbar({
 }
 
 function ActionButton({
-  icon,
+  icon: IconComponent,
   onPress,
   ariaLabel,
+  color = "#FFF",
 }: {
-  icon: string;
+  icon: ComponentType<SvgProps>;
   onPress: () => void;
   ariaLabel: string;
+  color?: string;
 }) {
   const scale = useSharedValue(1);
 
@@ -199,93 +167,7 @@ function ActionButton({
       style={[styles.actionButton, animatedStyle]}
       accessibilityLabel={ariaLabel}
     >
-      <IconSymbol name={icon as any} size={20} color="#E7E9EA" />
-    </AnimatedPressable>
-  );
-}
-
-function ViewToggleButton({
-  mode,
-  currentMode,
-  onPress,
-  icon,
-  label,
-  compact = false,
-}: {
-  mode: ViewMode;
-  currentMode: ViewMode;
-  onPress: () => void;
-  icon: string;
-  label: string;
-  compact?: boolean;
-}) {
-  const isActive = mode === currentMode;
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePressIn = () => {
-    scale.value = withSpring(compact ? 0.95 : 0.98);
-  };
-
-  const handlePressOut = () => {
-    scale.value = withSpring(1);
-  };
-
-  if (compact) {
-    return (
-      <AnimatedPressable
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        style={[
-          styles.compactToggleButton,
-          isActive
-            ? styles.compactToggleButtonActive
-            : styles.compactToggleButtonInactive,
-          animatedStyle,
-        ]}
-        accessibilityLabel={label}
-      >
-        <IconSymbol
-          name={icon as any}
-          size={20}
-          color={isActive ? "#fff" : "#8B98A5"}
-        />
-      </AnimatedPressable>
-    );
-  }
-
-  return (
-    <AnimatedPressable
-      onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      style={[
-        styles.defaultToggleButton,
-        isActive
-          ? styles.defaultToggleButtonActive
-          : styles.defaultToggleButtonInactive,
-        animatedStyle,
-      ]}
-    >
-      <IconSymbol
-        name={icon as any}
-        size={20}
-        color={isActive ? "#fff" : "#8B98A5"}
-      />
-      <Text
-        style={[
-          styles.defaultToggleButtonText,
-          isActive
-            ? styles.defaultToggleButtonTextActive
-            : styles.defaultToggleButtonTextInactive,
-        ]}
-      >
-        {label}
-      </Text>
+      <IconComponent width={24} height={24} color={color} stroke={color} />
     </AnimatedPressable>
   );
 }

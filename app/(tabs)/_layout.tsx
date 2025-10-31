@@ -2,8 +2,13 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+import {
+  CompassIcon,
+  MapPinIcon,
+  MessageCircleIcon,
+  UserRoundIcon,
+} from "@/assets/icons";
 import { HapticTab } from "@/components/haptic-tab";
-import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import useSafeAreaInsets from "@/hooks/use-safe-area-insets";
@@ -35,7 +40,7 @@ export default function TabLayout() {
         options={{
           title: t("explore"),
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="safari.fill" color={color} />
+            <MapPinIcon width={28} height={28} color={color} />
           ),
         }}
       />
@@ -44,7 +49,7 @@ export default function TabLayout() {
         options={{
           title: t("discover"),
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="sparkles" color={color} />
+            <CompassIcon width={28} height={28} color={color} />
           ),
         }}
       />
@@ -53,7 +58,7 @@ export default function TabLayout() {
         options={{
           title: t("matches"),
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="message.fill" color={color} />
+            <MessageCircleIcon width={28} height={28} color={color} />
           ),
         }}
       />
@@ -62,7 +67,7 @@ export default function TabLayout() {
         options={{
           title: t("profile"),
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="person.fill" color={color} />
+            <UserRoundIcon width={28} height={28} color={color} />
           ),
         }}
       />
