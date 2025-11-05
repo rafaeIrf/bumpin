@@ -12,13 +12,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  BackHandler,
-  Keyboard,
-  Platform,
-  StyleSheet,
-  View,
-} from "react-native";
+import { BackHandler, Keyboard, Platform, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   BottomSheetContext,
@@ -39,7 +33,7 @@ export default function BottomSheetProvider({
   const [bsProps, setBSProps] = useState<BSProps | null>(null);
 
   const handleExpandPress = useCallback(() => {
-    bottomSheetRef.current?.expand();
+    bottomSheetRef.current?.snapToIndex(0);
   }, []);
   const handleClosePress = useCallback(() => {
     setIsBottomSheetOpen(false);
@@ -132,9 +126,10 @@ export default function BottomSheetProvider({
       >
         <BottomSheetScrollView
           enableFooterMarginAdjustment={true}
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{ paddingBottom }}
+          showsVerticalScrollIndicator={false}
         >
-          <View style={{ paddingBottom, flex: 1 }}>{bsProps?.content()}</View>
+          {bsProps?.content()}
         </BottomSheetScrollView>
       </BottomSheet>
     </BottomSheetContext.Provider>

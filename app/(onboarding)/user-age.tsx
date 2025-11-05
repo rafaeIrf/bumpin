@@ -10,7 +10,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -126,24 +125,13 @@ export default function UserAgeScreen() {
   };
 
   const handleContinue = () => {
-    if (!birthDate) {
-      Alert.alert("Erro", t("screens.onboarding.ageRequired"));
-      return;
+    if (isValid) {
+      // TODO: Save birthdate to profile/storage
+      console.log("Birth date:", birthDate);
+
+      // Navigate to next onboarding step (gender selection)
+      router.push("/(onboarding)/user-gender" as any);
     }
-
-    const age = calculateAge(birthDate);
-
-    if (age < 18) {
-      Alert.alert("Erro", t("screens.onboarding.ageMinimum"));
-      return;
-    }
-
-    // TODO: Save birth date and age to profile/storage
-    console.log("Birth date:", birthDate.toISOString());
-    console.log("Age:", age);
-
-    // Navigate to next onboarding step or main app
-    router.replace("/(tabs)" as any);
   };
 
   const formatDate = (date: Date): string => {
