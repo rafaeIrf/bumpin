@@ -101,9 +101,13 @@ export default function BottomSheetProvider({
   const dismissKeyboard = () => Keyboard.dismiss();
 
   const isDraggable = bsProps?.draggable || bsProps?.draggable === undefined;
+  const isFullScreen = bsProps?.snapPoints?.[0] === "100%";
 
   const insets = useSafeAreaInsets();
   const paddingBottom = Platform.OS === "ios" ? insets.bottom + 24 : 24;
+
+  // Para telas fullscreen, não precisa de padding bottom
+  const contentPaddingBottom = isFullScreen ? 0 : paddingBottom;
 
   return (
     <BottomSheetContext.Provider value={bottomSheetContext}>
@@ -120,14 +124,23 @@ export default function BottomSheetProvider({
         backgroundStyle={{
           ...styles.bottomSheetBg,
           backgroundColor: colors.surface,
+          borderTopRightRadius: isFullScreen ? 0 : spacing.lg,
+          borderTopLeftRadius: isFullScreen ? 0 : spacing.lg,
         }}
         backdropComponent={renderBackDrop}
         animateOnMount
+        topInset={isFullScreen ? 0 : undefined}
+        android_keyboardInputMode="adjustResize"
+        containerStyle={styles.bottomSheetContainer}
       >
         <BottomSheetScrollView
           enableFooterMarginAdjustment={true}
-          contentContainerStyle={{ paddingBottom }}
+          contentContainerStyle={{
+            paddingBottom: contentPaddingBottom,
+            flexGrow: 1,
+          }}
           showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
         >
           {bsProps?.content()}
         </BottomSheetScrollView>
@@ -150,5 +163,9 @@ const styles = StyleSheet.create({
   },
   handleIndicatorStyle: {
     backgroundColor: "transparent",
+  },
+  bottomSheetContainer: {
+    zIndex: 9999,
+    elevation: 9999,
   },
 });

@@ -238,9 +238,11 @@ export default function PlaceSearchContent({
   );
 
   return (
-    <ThemedView style={{ flex: 1, backgroundColor: colors.background }}>
+    <ThemedView
+      style={{ flex: 1, backgroundColor: colors.background, minHeight: "100%" }}
+    >
       {header}
-      <ThemedView style={{ flex: 1, padding: 16 }}>
+      <ThemedView style={{ flex: 1, padding: 16, minHeight: 600 }}>
         {searchQuery.length === 0 ? (
           <ThemedView style={{ alignItems: "center", marginTop: 48 }}>
             <ThemedView
@@ -320,6 +322,8 @@ export default function PlaceSearchContent({
             keyExtractor={(item) => item.placeId}
             ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
             renderItem={renderResult}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
           />
         ) : (
           <ThemedView style={{ alignItems: "center", marginTop: 48 }}>
