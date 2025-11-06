@@ -74,7 +74,7 @@ export default function ConnectWithScreen(props: ConnectWithScreenProps) {
     if (selectedOptions.length > 0) {
       // TODO: Save to user profile or context
       // updateUserData({ connectWith: selectedOptions });
-      router.replace("/(tabs)/(home)");
+      router.replace("/(onboarding)/intention");
     }
   };
 

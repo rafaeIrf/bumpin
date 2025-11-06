@@ -1,0 +1,220 @@
+import { MapPinIcon, SparklesIcon, UsersIcon } from "@/assets/icons";
+import { BaseTemplateScreen } from "@/components/base-template-screen";
+import { ThemedText } from "@/components/themed-text";
+import { Button } from "@/components/ui/button";
+import { spacing, typography } from "@/constants/theme";
+import { useThemeColors } from "@/hooks/use-theme-colors";
+import { t } from "@/modules/locales";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import Animated, {
+  FadeInDown,
+  FadeInUp,
+  ZoomIn,
+} from "react-native-reanimated";
+
+export default function CompleteScreen() {
+  const colors = useThemeColors();
+
+  const handleComplete = () => {
+    // TODO: Mark onboarding as completed in AsyncStorage
+    // await AsyncStorage.setItem('hasOnboarded', 'true');
+    router.replace("/(tabs)/(home)");
+  };
+
+  return (
+    <BaseTemplateScreen>
+      <View style={styles.container}>
+        {/* Success Icon */}
+        <Animated.View
+          entering={ZoomIn.delay(200).duration(600).springify()}
+          style={styles.iconContainer}
+        >
+          <LinearGradient
+            colors={["#1D9BF0", "#1A8CD8"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.iconGradient}
+          >
+            <SparklesIcon width={48} height={48} color="#FFFFFF" />
+          </LinearGradient>
+        </Animated.View>
+
+        {/* Title */}
+        <Animated.View
+          entering={FadeInUp.delay(400).duration(500)}
+          style={styles.titleContainer}
+        >
+          <ThemedText style={[styles.title, { color: colors.text }]}>
+            {t("screens.onboarding.completeTitle")}
+          </ThemedText>
+        </Animated.View>
+
+        {/* Subtitle */}
+        <Animated.View
+          entering={FadeInUp.delay(500).duration(500)}
+          style={styles.subtitleContainer}
+        >
+          <ThemedText
+            style={[styles.subtitle, { color: colors.textSecondary }]}
+          >
+            {t("screens.onboarding.completeSubtitle")}
+          </ThemedText>
+        </Animated.View>
+
+        {/* Main Button */}
+        <Animated.View
+          entering={FadeInDown.delay(600).duration(500)}
+          style={styles.buttonContainer}
+        >
+          <Button
+            onPress={handleComplete}
+            size="lg"
+            fullWidth
+            style={styles.exploreButton}
+          >
+            <View style={styles.buttonContent}>
+              <MapPinIcon width={20} height={20} color="#FFFFFF" />
+              <ThemedText style={styles.buttonText}>
+                {t("screens.onboarding.completeExplore")}
+              </ThemedText>
+            </View>
+          </Button>
+        </Animated.View>
+
+        {/* Features */}
+        <Animated.View
+          entering={FadeInDown.delay(700).duration(500)}
+          style={styles.featuresContainer}
+        >
+          <View style={styles.featureItem}>
+            <View
+              style={[
+                styles.featureIconContainer,
+                { backgroundColor: `${colors.accent}1A` },
+              ]}
+            >
+              <MapPinIcon width={24} height={24} color={colors.accent} />
+            </View>
+            <ThemedText
+              style={[styles.featureText, { color: colors.textSecondary }]}
+            >
+              {t("screens.onboarding.completeFindPlaces")}
+            </ThemedText>
+          </View>
+
+          <View style={styles.featureItem}>
+            <View
+              style={[
+                styles.featureIconContainer,
+                { backgroundColor: `${colors.accent}1A` },
+              ]}
+            >
+              <UsersIcon width={24} height={24} color={colors.accent} />
+            </View>
+            <ThemedText
+              style={[styles.featureText, { color: colors.textSecondary }]}
+            >
+              {t("screens.onboarding.completeConnectPeople")}
+            </ThemedText>
+          </View>
+        </Animated.View>
+      </View>
+    </BaseTemplateScreen>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  iconContainer: {
+    marginBottom: spacing.xl,
+  },
+  iconGradient: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#1D9BF0",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  titleContainer: {
+    alignItems: "center",
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.md,
+  },
+  title: {
+    ...typography.heading,
+    fontSize: 28,
+    textAlign: "center",
+  },
+  subtitleContainer: {
+    alignItems: "center",
+    marginBottom: spacing.xxl,
+    paddingHorizontal: spacing.md,
+  },
+  subtitle: {
+    ...typography.body,
+    fontSize: 18,
+    textAlign: "center",
+    lineHeight: 26,
+  },
+  buttonContainer: {
+    width: "100%",
+    marginBottom: spacing.xl,
+  },
+  exploreButton: {
+    minHeight: 56,
+    shadowColor: "#1D9BF0",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  buttonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
+  buttonText: {
+    ...typography.body,
+    color: "#FFFFFF",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+  featuresContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: spacing.xxl,
+    paddingTop: spacing.lg,
+  },
+  featureItem: {
+    alignItems: "center",
+    gap: spacing.sm,
+  },
+  featureIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  featureText: {
+    ...typography.caption,
+    fontSize: 12,
+    textAlign: "center",
+    maxWidth: 80,
+    lineHeight: 16,
+  },
+});
