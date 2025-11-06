@@ -51,9 +51,7 @@ ios/**/*.xcworkspace/xcuserdata/
 ios/**/*.xcodeproj/xcuserdata/
 ios/**/*.xcodeproj/project.xcworkspace/xcuserdata/
 
-# Firebase config files (sensitive)
-google-services.json
-GoogleService-Info.plist
+# Firebase debug logs (mas manter os arquivos de config)
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
