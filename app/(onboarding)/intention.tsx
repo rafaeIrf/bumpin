@@ -8,9 +8,9 @@ import {
   UsersIcon,
 } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
+import { ScreenBottomBar } from "@/components/screen-bottom-bar";
 import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
-import { Button } from "@/components/ui/button";
 import { spacing, typography } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { t } from "@/modules/locales";
@@ -78,10 +78,11 @@ export default function IntentionScreen() {
   };
 
   const handleContinue = () => {
+    console.log("Selected intentions:", selectedIntentions);
     if (selectedIntentions.length > 0) {
       // TODO: Save to user profile or context
       // updateUserData({ lookingFor: selectedIntentions[0] });
-      router.replace("/(onboarding)/location");
+      router.push("/(onboarding)/location");
     }
   };
 
@@ -96,119 +97,108 @@ export default function IntentionScreen() {
           }}
         />
       }
+      BottomBar={
+        <ScreenBottomBar
+          primaryLabel={t("screens.onboarding.continue")}
+          onPrimaryPress={handleContinue}
+          primaryDisabled={selectedIntentions.length === 0}
+        />
+      }
     >
-      <View style={styles.container}>
-        <ThemedText style={[styles.heading, { color: colors.text }]}>
-          {t("screens.onboarding.intentionTitle")}
-        </ThemedText>
-        <ThemedText style={[styles.subtitle, { color: colors.textSecondary }]}>
-          {t("screens.onboarding.intentionSubtitle")}
-        </ThemedText>
+      <ThemedText style={[styles.heading, { color: colors.text }]}>
+        {t("screens.onboarding.intentionTitle")}
+      </ThemedText>
+      <ThemedText style={[styles.subtitle, { color: colors.textSecondary }]}>
+        {t("screens.onboarding.intentionSubtitle")}
+      </ThemedText>
 
-        <View style={styles.optionsList}>
-          {intentionOptions.map((option) => {
-            const isSelected = selectedIntentions.includes(option.value);
-            return (
-              <Pressable
-                key={option.value}
-                onPress={() => toggleIntention(option.value)}
-                style={[
-                  styles.optionButton,
-                  {
-                    backgroundColor: isSelected
-                      ? `${colors.accent}1A`
-                      : colors.surface,
-                    borderColor: isSelected ? colors.accent : colors.border,
-                  },
-                ]}
-              >
-                <View style={styles.optionContent}>
-                  <option.icon
-                    width={32}
-                    height={32}
-                    color={isSelected ? colors.accent : colors.textSecondary}
-                  />
-                  <View style={{ flex: 1, minWidth: 0 }}>
-                    <View style={styles.optionLabelRow}>
-                      <ThemedText
-                        style={[styles.optionLabel, { color: colors.text }]}
-                      >
-                        {option.label}
-                      </ThemedText>
-                      {isSelected && (
-                        <View
-                          style={[
-                            styles.checkIconContainer,
-                            { backgroundColor: colors.accent },
-                          ]}
-                        >
-                          <CheckIcon width={18} height={18} color="#fff" />
-                        </View>
-                      )}
-                    </View>
+      <View style={styles.optionsList}>
+        {intentionOptions.map((option) => {
+          const isSelected = selectedIntentions.includes(option.value);
+          return (
+            <Pressable
+              key={option.value}
+              onPress={() => toggleIntention(option.value)}
+              style={[
+                styles.optionButton,
+                {
+                  backgroundColor: isSelected
+                    ? `${colors.accent}1A`
+                    : colors.surface,
+                  borderColor: isSelected ? colors.accent : colors.border,
+                },
+              ]}
+            >
+              <View style={styles.optionContent}>
+                <option.icon
+                  width={32}
+                  height={32}
+                  color={isSelected ? colors.accent : colors.textSecondary}
+                />
+                <View style={{ flex: 1, minWidth: 0 }}>
+                  <View style={styles.optionLabelRow}>
                     <ThemedText
-                      style={[
-                        styles.optionDesc,
-                        { color: colors.textSecondary },
-                      ]}
+                      style={[styles.optionLabel, { color: colors.text }]}
                     >
-                      {option.description}
+                      {option.label}
                     </ThemedText>
+                    {isSelected && (
+                      <View
+                        style={[
+                          styles.checkIconContainer,
+                          { backgroundColor: colors.accent },
+                        ]}
+                      >
+                        <CheckIcon width={18} height={18} color="#fff" />
+                      </View>
+                    )}
                   </View>
+                  <ThemedText
+                    style={[styles.optionDesc, { color: colors.textSecondary }]}
+                  >
+                    {option.description}
+                  </ThemedText>
                 </View>
-              </Pressable>
-            );
-          })}
-        </View>
-
-        {selectedIntentions.length > 0 && (
-          <ThemedText
-            style={[styles.selectedInfo, { color: colors.textSecondary }]}
-          >
-            {selectedIntentions.length === 1
-              ? t("screens.onboarding.intentionSelectedOne")
-              : t("screens.onboarding.intentionSelectedMany", {
-                  count: selectedIntentions.length,
-                })}
-          </ThemedText>
-        )}
-
-        <Button
-          onPress={handleContinue}
-          disabled={selectedIntentions.length === 0}
-          size="lg"
-          fullWidth
-          style={styles.continueButton}
-        >
-          {t("screens.onboarding.continue")}
-        </Button>
+              </View>
+            </Pressable>
+          );
+        })}
       </View>
+
+      {selectedIntentions.length > 0 && (
+        <ThemedText
+          style={[styles.selectedInfo, { color: colors.textSecondary }]}
+        >
+          {selectedIntentions.length === 1
+            ? t("screens.onboarding.intentionSelectedOne")
+            : t("screens.onboarding.intentionSelectedMany", {
+                count: selectedIntentions.length,
+              })}
+        </ThemedText>
+      )}
     </BaseTemplateScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.xxl,
-  },
   heading: {
     ...typography.heading,
     fontSize: 26,
     marginBottom: spacing.sm,
     textAlign: "center",
+    paddingHorizontal: spacing.lg,
   },
   subtitle: {
     ...typography.body,
     fontSize: 16,
     marginBottom: spacing.xl,
     textAlign: "center",
+    paddingHorizontal: spacing.lg,
   },
   optionsList: {
     gap: spacing.md,
     marginBottom: spacing.lg,
+    paddingHorizontal: spacing.lg,
   },
   optionButton: {
     flexDirection: "row",
@@ -255,9 +245,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: "center",
     marginBottom: spacing.md,
-  },
-  continueButton: {
-    marginTop: spacing.lg,
-    marginBottom: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
 });

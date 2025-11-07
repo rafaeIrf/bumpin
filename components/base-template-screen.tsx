@@ -6,9 +6,45 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+/**
+ * Base template for all screens in the app.
+ * Provides automatic header spacing, scrolling, pull-to-refresh, and fixed bottom bar support.
+ *
+ * Features:
+ * - Automatic padding for status bar and header (if TopHeader is provided)
+ * - Built-in ScrollView with pull-to-refresh capability
+ * - Fixed bottom bar for buttons/actions (BottomBar prop)
+ * - Smooth scroll animations via Reanimated
+ * - Theme-aware and safe area aware
+ *
+ * Usage:
+ * ```tsx
+ * <BaseTemplateScreen
+ *   TopHeader={<ScreenToolbar title="My Screen" />}
+ *   BottomBar={<Button onPress={handleSave}>Save</Button>}
+ *   refreshing={loading}
+ *   onRefresh={fetchData}
+ * >
+ *   <YourContent />
+ * </BaseTemplateScreen>
+ * ```
+ *
+ * @param TopHeader - Optional header component rendered at the top with absolute positioning
+ * @param BottomBar - Optional bottom bar component rendered at bottom with absolute positioning (great for fixed buttons)
+ * @param children - Main scrollable content
+ * @param refreshing - Whether refresh indicator is active
+ * @param onRefresh - Callback for pull-to-refresh
+ * @param scrollEnabled - Enable/disable scrolling (default: true)
+ * @param showsVerticalScrollIndicator - Show/hide scroll indicator (default: true)
+ * @param containerStyle - Style for main wrapper View
+ * @param contentContainerStyle - Style for ScrollView content container
+ */
 interface BaseTemplateScreenProps {
   // Top header component (usually ScreenToolbar)
   TopHeader?: ReactNode;
+
+  // Bottom bar component (usually fixed buttons)
+  BottomBar?: ReactNode;
 
   // Main content
   children: ReactNode;
@@ -28,6 +64,7 @@ interface BaseTemplateScreenProps {
 
 export function BaseTemplateScreen({
   TopHeader,
+  BottomBar,
   children,
   refreshing = false,
   onRefresh,
@@ -72,7 +109,12 @@ export function BaseTemplateScreen({
       {/* Scrollable content */}
       <Animated.ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
+        contentContainerStyle={[
+          styles.contentContainer,
+          contentContainerStyle,
+          // Add extra padding bottom if BottomBar exists
+          BottomBar ? styles.contentWithBottomBar : undefined,
+        ]}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         scrollEnabled={scrollEnabled}
@@ -85,6 +127,13 @@ export function BaseTemplateScreen({
       >
         {children}
       </Animated.ScrollView>
+
+      {/* Bottom Bar - positioned absolutely to stay at bottom */}
+      {BottomBar && (
+        <View style={styles.bottomBarContainer} pointerEvents="box-none">
+          {BottomBar}
+        </View>
+      )}
     </View>
   );
 }
@@ -97,12 +146,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingTop: 112, // Space for toolbar (64px content + 48px status bar)
+    paddingTop: 136, // Space for toolbar (64px content + 48px status bar)
     paddingBottom: 32,
+  },
+  contentWithBottomBar: {
+    paddingBottom: 120, // Extra space for bottom bar
   },
   headerContainer: {
     position: "absolute",
     top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+  },
+  bottomBarContainer: {
+    position: "absolute",
+    bottom: 0,
     left: 0,
     right: 0,
     zIndex: 10,

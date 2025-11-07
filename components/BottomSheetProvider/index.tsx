@@ -127,7 +127,7 @@ export default function BottomSheetProvider({
           borderTopRightRadius: isFullScreen ? 0 : spacing.lg,
           borderTopLeftRadius: isFullScreen ? 0 : spacing.lg,
         }}
-        backdropComponent={renderBackDrop}
+        backdropComponent={bsProps ? renderBackDrop : undefined}
         animateOnMount
         topInset={isFullScreen ? 0 : undefined}
         android_keyboardInputMode="adjustResize"
