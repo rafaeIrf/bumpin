@@ -131,7 +131,6 @@ export default function BottomSheetProvider({
         animateOnMount
         topInset={isFullScreen ? 0 : undefined}
         android_keyboardInputMode="adjustResize"
-        containerStyle={styles.bottomSheetContainer}
       >
         <BottomSheetScrollView
           enableFooterMarginAdjustment={true}
@@ -163,9 +162,5 @@ const styles = StyleSheet.create({
   },
   handleIndicatorStyle: {
     backgroundColor: "transparent",
-  },
-  bottomSheetContainer: {
-    zIndex: 9999,
-    elevation: 9999,
   },
 });
