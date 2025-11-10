@@ -59,10 +59,14 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
+      - name: 🍎 Build & Submit iOS (Production)
+        run: |
+          eas build --platform ios --profile production --non-interactive
+          eas submit --platform ios --latest --non-interactive
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+
       - name: 🍎 Build & Submit Android (Production)
-        if: |
-          (startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push') ||
-          (github.event_name == 'workflow_dispatch' && inputs.platform == 'android' && inputs.profile == 'production' && inputs.submit)
         run: |
           eas build --platform android --profile production --non-interactive
           eas submit --platform android --latest --non-interactive
