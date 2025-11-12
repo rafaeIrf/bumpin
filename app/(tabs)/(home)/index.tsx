@@ -3,6 +3,7 @@ import {
   CoffeeIcon,
   DumbbellIcon,
   FlameIcon,
+  MapIcon,
   MapPinIcon,
   SearchIcon,
   SlidersHorizontalIcon,
@@ -252,27 +253,31 @@ export default function HomeScreen() {
   return (
     <BaseTemplateScreen
       TopHeader={
-        <ThemedView>
-          <ScreenToolbar
-            leftAction={{
-              icon: SlidersHorizontalIcon,
-              onClick: () => {},
-              ariaLabel: "Voltar",
+        <ScreenToolbar
+          leftAction={{
+            icon: SlidersHorizontalIcon,
+            onClick: () => {},
+            ariaLabel: "Voltar",
+            color: colors.icon,
+          }}
+          title="Explorar"
+          titleIcon={MapPinIcon}
+          titleIconColor={colors.accent}
+          rightActions={[
+            {
+              icon: SearchIcon,
+              onClick: handleOpenSearch,
+              ariaLabel: "Pesquisar",
               color: colors.icon,
-            }}
-            title="Explorar"
-            titleIcon={MapPinIcon}
-            titleIconColor={colors.accent}
-            rightActions={[
-              {
-                icon: SearchIcon,
-                onClick: handleOpenSearch,
-                ariaLabel: "Buscar",
-                color: colors.icon,
-              },
-            ]}
-          />
-        </ThemedView>
+            },
+            {
+              icon: MapIcon,
+              onClick: () => {},
+              ariaLabel: "Mapa",
+              color: colors.icon,
+            },
+          ]}
+        />
       }
       refreshing={refreshing}
       onRefresh={handleRefresh}
