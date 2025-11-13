@@ -3,7 +3,6 @@ import {
   CoffeeIcon,
   DumbbellIcon,
   FlameIcon,
-  MapIcon,
   MapPinIcon,
   SearchIcon,
   SlidersHorizontalIcon,
@@ -11,7 +10,7 @@ import {
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { useCustomBottomSheet } from "@/components/BottomSheetProvider/hooks";
 import { CategoryCard } from "@/components/category-card";
-import { ConnectedBar } from "@/components/connected-bar";
+import { ConnectedToolbarTitle } from "@/components/connected-toolbar-title";
 import { ConnectionBottomSheet } from "@/components/connection-bottom-sheet";
 import { GenericConfirmationBottomSheet } from "@/components/generic-confirmation-bottom-sheet";
 import { PlaceCardFeatured } from "@/components/place-card-featured";
@@ -161,9 +160,15 @@ export default function HomeScreen() {
           venueName={place.name}
           venueState="active"
           onConnect={() => {
-            console.log("Connected to:", place.name);
             bottomSheet.close();
-            // TODO: Implement connection logic
+            router.push({
+              pathname: "/main/place-people",
+              params: {
+                placeId: place.id,
+                placeName: place.name,
+                distance: place.distance,
+              },
+            });
           }}
           onCancel={() => {
             bottomSheet.close();
@@ -260,20 +265,22 @@ export default function HomeScreen() {
             ariaLabel: "Voltar",
             color: colors.icon,
           }}
-          title="Explorar"
-          titleIcon={MapPinIcon}
+          title={connectedVenue ? undefined : "Explorar"}
+          titleIcon={connectedVenue ? undefined : MapPinIcon}
           titleIconColor={colors.accent}
+          customTitleView={
+            connectedVenue ? (
+              <ConnectedToolbarTitle
+                venueName={connectedVenue}
+                onPress={handleLeaveVenue}
+              />
+            ) : undefined
+          }
           rightActions={[
             {
               icon: SearchIcon,
               onClick: handleOpenSearch,
               ariaLabel: "Pesquisar",
-              color: colors.icon,
-            },
-            {
-              icon: MapIcon,
-              onClick: () => {},
-              ariaLabel: "Mapa",
               color: colors.icon,
             },
           ]}
@@ -283,10 +290,7 @@ export default function HomeScreen() {
       onRefresh={handleRefresh}
     >
       <ThemedView>
-        {/* Connected Bar */}
-        {connectedVenue && (
-          <ConnectedBar venueName={connectedVenue} onLeave={handleLeaveVenue} />
-        )}
+        {/* Connected Bar removed - integrated into toolbar */}
 
         <Animated.View entering={FadeInDown.delay(0).springify()}>
           <ThemedView style={styles.section}>
