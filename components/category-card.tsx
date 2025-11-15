@@ -18,8 +18,8 @@ interface CategoryCardProps {
     icon: React.ComponentType<{ width: number; height: number; color: string }>;
     title: string;
     description: string;
-    gradient: [string, string];
-    categoryIcon: string;
+    iconColor: string;
+    iconBgColor: string;
   };
   isSelected?: boolean;
   onClick: () => void;
@@ -100,14 +100,14 @@ export function CategoryCard({
 
           <View style={styles.content}>
             {/* Icon with gradient background */}
-            <LinearGradient
-              colors={category.gradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.iconContainer}
+            <View
+              style={[
+                styles.iconContainer,
+                { backgroundColor: category.iconBgColor },
+              ]}
             >
-              <Icon width={40} height={40} color="#FFFFFF" />
-            </LinearGradient>
+              <Icon width={40} height={40} color={category.iconColor} />
+            </View>
 
             {/* Content */}
             <View style={styles.textContainer}>
@@ -168,9 +168,9 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   iconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
+    width: 72,
+    height: 72,
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
   },

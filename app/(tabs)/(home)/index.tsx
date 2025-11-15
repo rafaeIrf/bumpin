@@ -3,6 +3,7 @@ import {
   CoffeeIcon,
   DumbbellIcon,
   FlameIcon,
+  HeartIcon,
   MapPinIcon,
   SearchIcon,
   SlidersHorizontalIcon,
@@ -23,7 +24,7 @@ import { useThemeColors } from "@/hooks/use-theme-colors";
 import { t } from "@/modules/locales";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
 
 interface ActivePlace {
@@ -40,47 +41,65 @@ interface Category {
   icon: React.ComponentType<{ width: number; height: number; color: string }>;
   title: string;
   description: string;
-  gradient: [string, string];
+  iconColor: string;
+  iconBgColor: string;
   types: string[];
-  categoryIcon: string;
 }
 
 const categories: Category[] = [
   {
+    id: "hightlighted",
+    icon: FlameIcon,
+    title: "Movimentados Agora",
+    description: "Lugares cheios e com gente se conectando.",
+    iconColor: "#FF6B35",
+    iconBgColor: "rgba(41, 151, 255, 0.12)",
+    types: ["bar", "night_club"],
+  },
+  {
+    id: "favorites",
+    icon: HeartIcon,
+    title: "Locais Favoritos",
+    description: "Seus lugares preferidos para se conectar.",
+    iconColor: "#FFFFFF",
+    iconBgColor: "rgba(41, 151, 255, 0.12)",
+    types: ["bar", "night_club"],
+  },
+  {
     id: "nightlife",
     icon: BeerIcon,
-    title: "Rolês & Noitadas",
+    title: "Bares & Baladas",
     description: "Pra sair e conhecer gente nova.",
-    gradient: ["#F39C12", "#D35400"],
+    iconColor: "#FF8A33",
+    iconBgColor: "rgba(255, 138, 51, 0.12)",
     types: ["bar", "night_club"],
-    categoryIcon: "🍸",
   },
   {
     id: "cafes",
     icon: CoffeeIcon,
     title: "Cafés & Bate-Papo",
     description: "Lugares pra conversar e relaxar.",
-    gradient: ["#8E6E53", "#5C4033"],
+    iconColor: "#9B6C4A",
+    iconBgColor: "rgba(155, 108, 74, 0.12)",
     types: ["cafe"],
-    categoryIcon: "☕",
   },
   {
     id: "university",
     icon: MapPinIcon,
     title: "Vida Universitária",
     description: "Onde os encontros acontecem na rotina.",
-    gradient: ["#3498DB", "#2C3E50"],
+    iconColor: "#3DAAFF",
+    iconBgColor: "rgba(61, 170, 255, 0.12)",
     types: ["university"],
-    categoryIcon: "🎓",
   },
   {
     id: "fitness",
     icon: DumbbellIcon,
     title: "Bem-estar & Movimento",
     description: "Conexões que começam no treino.",
-    gradient: ["#27AE60", "#145A32"],
+    iconColor: "#1DB954",
+    iconBgColor: "rgba(29, 185, 84, 0.12)",
     types: ["gym"],
-    categoryIcon: "🏋️",
   },
 ];
 
@@ -290,47 +309,6 @@ export default function HomeScreen() {
       onRefresh={handleRefresh}
     >
       <ThemedView>
-        {/* Connected Bar removed - integrated into toolbar */}
-
-        <Animated.View entering={FadeInDown.delay(0).springify()}>
-          <ThemedView style={styles.section}>
-            <ThemedView style={styles.sectionHeader}>
-              <FlameIcon width={18} height={18} color={colors.error} />
-              <ThemedText style={[styles.sectionTitle, { color: colors.text }]}>
-                Lugares com pessoas agora
-              </ThemedText>
-            </ThemedView>
-
-            {activePlaces.length > 0 ? (
-              <FlatList
-                horizontal
-                data={activePlaces}
-                renderItem={renderActivePlace}
-                keyExtractor={(item) => item.id}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 16 }}
-              />
-            ) : (
-              <ThemedView
-                style={[
-                  styles.emptyCard,
-                  {
-                    backgroundColor: colors.surface,
-                    borderColor: colors.border,
-                  },
-                ]}
-              >
-                <ThemedText
-                  style={[styles.emptyText, { color: colors.textSecondary }]}
-                >
-                  Ainda não há pessoas conectadas por perto. Que tal ser o
-                  primeiro a aparecer? 👀
-                </ThemedText>
-              </ThemedView>
-            )}
-          </ThemedView>
-        </Animated.View>
-
         {/* Title Section */}
         <Animated.View entering={FadeInDown.delay(200).springify()}>
           <ThemedView style={[styles.section, { paddingTop: 8 }]}>

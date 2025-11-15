@@ -1,7 +1,6 @@
 import { typography } from "@/constants/theme";
-import { BlurView } from "expo-blur";
 import { ComponentType } from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   SharedValue,
   interpolate,
@@ -32,7 +31,6 @@ interface ScreenToolbarProps {
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export function ScreenToolbar({
   leftAction,
@@ -59,7 +57,7 @@ export function ScreenToolbar({
     const backgroundColor = interpolate(
       scrollY.value,
       [0, 50],
-      [0, 0.4],
+      [0, 0.8],
       "clamp"
     );
 
@@ -93,16 +91,6 @@ export function ScreenToolbar({
       {/* Animated background overlay */}
       <Animated.View
         style={[StyleSheet.absoluteFill, animatedBackgroundStyle]}
-      />
-
-      {/* Animated blur layer */}
-      <AnimatedBlurView
-        intensity={80}
-        tint="systemMaterialDark"
-        experimentalBlurMethod={
-          Platform.OS === "android" ? "dimezisBlurView" : undefined
-        }
-        style={[StyleSheet.absoluteFill, { opacity: 1 }]}
       />
 
       {/* Content */}

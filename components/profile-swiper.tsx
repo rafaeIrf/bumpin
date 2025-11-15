@@ -325,7 +325,8 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     flex: 1,
-    padding: spacing.md,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.md,
     justifyContent: "center",
     alignItems: "center",
   },
