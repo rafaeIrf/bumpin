@@ -280,8 +280,8 @@ export default function HomeScreen() {
         <ScreenToolbar
           leftAction={{
             icon: SlidersHorizontalIcon,
-            onClick: () => {},
-            ariaLabel: "Voltar",
+            onClick: () => router.push("main/filters" as any),
+            ariaLabel: "Filtros",
             color: colors.icon,
           }}
           title={connectedVenue ? undefined : "Explorar"}

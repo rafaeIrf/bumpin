@@ -131,7 +131,9 @@
     "fromYou": "de você",
     "onePerson": "1 pessoa agora",
     "peopleNow": "{{count}} pessoas agora",
-    "error": "Erro"
+    "error": "Erro",
+    "min": "mínima",
+    "max": "máxima"
   },
   "venue": {
     "connection": {
@@ -210,5 +212,34 @@
     "subscribePremium": "Assinar Premium",
     "backToPlaces": "Voltar aos lugares",
     "howItWorks": "Como funciona"
+  },
+  "filters": {
+    "title": "Filtros",
+    "gender": {
+      "title": "Gênero",
+      "all": "Todos os gêneros",
+      "description": "Escolha com quem você quer ver e se conectar. Isso só afeta o seu feed.",
+      "selectAtLeastOne": "Selecione pelo menos uma opção"
+    },
+    "age": {
+      "title": "Idade",
+      "description": "Selecione a faixa de idade das pessoas com quem você quer se conectar.",
+      "range": "{{min}} anos até {{max}} anos",
+      "rangeMax": "{{min}} anos até {{max}}+",
+      "hint": "Arraste os controles para ajustar a faixa de idade"
+    },
+    "connectionType": {
+      "title": "Tipo de conexão",
+      "description": "Escolha uma ou mais intenções para encontrar pessoas com os mesmos objetivos.",
+      "friends": "Amizades",
+      "dating": "Relacionamento",
+      "serious": "Relacionamento sério",
+      "networking": "Networking",
+      "casual": "Casual"
+    },
+    "verified": {
+      "title": "Perfis verificados",
+      "description": "Mostrar apenas perfis verificados"
+    }
   }
 }

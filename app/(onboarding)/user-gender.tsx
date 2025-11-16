@@ -1,10 +1,11 @@
-import { ArrowLeftIcon, CheckIcon } from "@/assets/icons";
+import { ArrowLeftIcon } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { useCustomBottomSheet } from "@/components/BottomSheetProvider/hooks";
 import { GenderIdentityBottomSheet } from "@/components/gender-identity-bottom-sheet";
 import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { Button } from "@/components/ui/button";
+import { SelectionCard } from "@/components/ui/selection-card";
 import { spacing, typography } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { t } from "@/modules/locales";
@@ -13,10 +14,8 @@ import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
-  View,
 } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
@@ -124,43 +123,12 @@ export default function UserGenderScreen() {
                 (option.value === "Não binário" && isNonBinaryGender);
 
               return (
-                <Pressable
+                <SelectionCard
                   key={option.value}
+                  label={option.label}
+                  isSelected={Boolean(isSelected)}
                   onPress={() => handleGenderSelect(option.value)}
-                  style={[
-                    styles.optionButton,
-                    {
-                      backgroundColor: isSelected
-                        ? `${colors.accent}1A`
-                        : colors.surface,
-                      borderColor: isSelected ? colors.accent : colors.border,
-                    },
-                  ]}
-                >
-                  <View style={styles.optionContent}>
-                    <ThemedText
-                      style={[
-                        styles.optionLabel,
-                        {
-                          color: isSelected
-                            ? colors.text
-                            : colors.textSecondary,
-                        },
-                      ]}
-                    >
-                      {option.label}
-                    </ThemedText>
-                    {isSelected && (
-                      <View style={{ flex: 0, marginLeft: "auto" }}>
-                        <CheckIcon
-                          width={20}
-                          height={20}
-                          color={colors.accent}
-                        />
-                      </View>
-                    )}
-                  </View>
-                </Pressable>
+                />
               );
             })}
           </Animated.View>
@@ -222,34 +190,6 @@ const styles = StyleSheet.create({
   optionsContainer: {
     gap: spacing.sm,
     marginBottom: spacing.lg,
-  },
-  optionButton: {
-    padding: spacing.lg,
-    borderRadius: 16,
-    borderWidth: 2,
-  },
-  optionContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.md,
-  },
-  emoji: {
-    fontSize: 28,
-  },
-  optionLabel: {
-    ...typography.body,
-    flex: 1,
-    fontWeight: "600",
-  },
-  identityPreview: {
-    padding: spacing.md,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: spacing.lg,
-  },
-  identityText: {
-    ...typography.caption,
-    fontWeight: "500",
   },
   buttonContainer: {
     marginTop: spacing.md,

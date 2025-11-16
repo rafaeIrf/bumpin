@@ -131,7 +131,9 @@
     "fromYou": "from you",
     "onePerson": "1 person now",
     "peopleNow": "{{count}} people now",
-    "error": "Error"
+    "error": "Error",
+    "min": "minimum",
+    "max": "maximum"
   },
   "venue": {
     "connection": {
@@ -210,5 +212,34 @@
     "subscribePremium": "Subscribe Premium",
     "backToPlaces": "Back to places",
     "howItWorks": "How it works"
+  },
+  "filters": {
+    "title": "Filters",
+    "gender": {
+      "title": "Gender",
+      "all": "All genders",
+      "description": "Choose who you want to see and connect with. This only affects your feed.",
+      "selectAtLeastOne": "Select at least one option"
+    },
+    "age": {
+      "title": "Age",
+      "description": "Select the age range of people you want to meet.",
+      "range": "{{min}} to {{max}} years old",
+      "rangeMax": "{{min}} to {{max}}+ years old",
+      "hint": "Drag the controls to adjust the age range"
+    },
+    "connectionType": {
+      "title": "Connection type",
+      "description": "Pick one or more intentions to match with people looking for the same.",
+      "friends": "Friends",
+      "dating": "Dating",
+      "serious": "Serious relationship",
+      "networking": "Networking",
+      "casual": "Casual"
+    },
+    "verified": {
+      "title": "Verified profiles",
+      "description": "Show only verified profiles"
+    }
   }
 }

@@ -106,8 +106,10 @@ import { t } from "@/modules/locales";
   - Import: `import { typography } from "@/constants/theme";`
   - Available styles: `heading`, `subheading`, `body`, `caption`
   - Usage: `<Text style={{ ...typography.body, color: colors.text }}>Title</Text>`
-  - **Never hardcode font sizes or line heights** - always spread typography tokens first, then override if needed.
-  - Example override: `<Text style={{ ...typography.heading, fontSize: 32 }}>Large Title</Text>`
+  - **Never override properties that typography already provides** (fontSize, lineHeight, fontFamily, fontWeight, letterSpacing).
+  - Typography tokens already include: `fontSize`, `lineHeight`, `fontFamily`, `fontWeight`, `letterSpacing`.
+  - **Only override typography properties when absolutely necessary** for specific design requirements.
+  - When you need a different size, consider if a different typography token fits better (e.g., use `heading` instead of overriding `body` fontSize).
 - **Spacing**: Use values from `spacing` in `constants/theme.ts` (xs, sm, md, lg, xl, xxl).
   - **Never hardcode spacing values** - use spacing tokens for margins, padding, gaps.
 - Icons with `IconSymbol` or SVG icons from `@/assets/icons`.
@@ -120,7 +122,7 @@ import { t } from "@/modules/locales";
 // ❌ Don't - Hardcoded colors, font sizes, and spacing
 <Text style={{ color: "#8B98A5", fontSize: 16, marginBottom: 24 }}>Hello</Text>;
 
-// ✅ Do - Use theme colors, typography, and spacing
+// ✅ Do - Use theme colors, typography, and spacing (no overrides)
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { typography, spacing } from "@/constants/theme";
 
@@ -135,10 +137,15 @@ const colors = useThemeColors();
   Hello
 </Text>;
 
-// ✅ Correct - Override typography when needed
-<Text style={{ ...typography.heading, fontSize: 32, color: colors.text }}>
-  Custom Size
-</Text>;
+// ❌ Don't - Override typography properties unnecessarily
+<Text style={{ ...typography.body, fontSize: 18, lineHeight: 24 }}>Text</Text>;
+
+// ✅ Do - Use the appropriate typography token instead
+<Text style={{ ...typography.subheading, color: colors.text }}>Text</Text>;
+
+// ⚠️ Only when absolutely necessary - Override with clear reason
+// Example: Marketing hero text that needs unique sizing
+<Text style={{ ...typography.heading, fontSize: 48 }}>Special Hero Title</Text>;
 ```
 
 ## Screen structure
