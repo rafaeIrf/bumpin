@@ -1,7 +1,6 @@
-import { ArrowLeftIcon, XIcon } from "@/assets/icons";
+import { XIcon } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { ScreenBottomBar } from "@/components/screen-bottom-bar";
-import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { spacing, typography } from "@/constants/theme";
 import { useImagePicker } from "@/hooks/use-image-picker";
@@ -34,7 +33,7 @@ export default function UserPhotosScreen() {
 
     try {
       const remainingSlots = 9 - photos.length;
-      
+
       // Usar seleção múltipla de imagens
       const result = await pickFromLibrary({
         aspect: [3, 4],
@@ -97,15 +96,7 @@ export default function UserPhotosScreen() {
 
   return (
     <BaseTemplateScreen
-      TopHeader={
-        <ScreenToolbar
-          leftAction={{
-            icon: ArrowLeftIcon,
-            onClick: () => router.back(),
-            ariaLabel: t("common.back"),
-          }}
-        />
-      }
+      hasStackHeader
       BottomBar={
         <ScreenBottomBar
           primaryLabel={t("screens.onboarding.continue")}
@@ -196,17 +187,6 @@ export default function UserPhotosScreen() {
         <ThemedText
           style={[styles.photoCount, { color: colors.textSecondary }]}
         >
-          <ThemedText
-            style={[
-              styles.photoCountNumber,
-              {
-                color: photos.length >= 3 ? colors.accent : colors.text,
-                fontWeight: "600",
-              },
-            ]}
-          >
-            {photos.length}
-          </ThemedText>{" "}
           {t("screens.onboarding.photosCount", { count: photos.length })} •{" "}
           {t("screens.onboarding.photosMinimum")}
         </ThemedText>
@@ -230,16 +210,13 @@ export default function UserPhotosScreen() {
 const styles = StyleSheet.create({
   heading: {
     ...typography.heading,
-    fontSize: 26,
     marginBottom: spacing.sm,
-    textAlign: "center",
+    marginTop: spacing.md,
     paddingHorizontal: spacing.lg,
   },
   subtitle: {
     ...typography.body,
-    fontSize: 16,
     marginBottom: spacing.xl,
-    textAlign: "center",
     paddingHorizontal: spacing.lg,
   },
   gridContainer: {
@@ -275,7 +252,6 @@ const styles = StyleSheet.create({
   },
   mainBadgeText: {
     color: "#FFFFFF",
-    fontSize: 11,
     fontWeight: "600",
   },
   removeButton: {
@@ -305,7 +281,6 @@ const styles = StyleSheet.create({
   },
   addPhotoLabel: {
     ...typography.caption,
-    fontSize: 11,
   },
   infoContainer: {
     alignItems: "center",
@@ -315,15 +290,11 @@ const styles = StyleSheet.create({
   },
   photoCount: {
     ...typography.body,
-    fontSize: 14,
     textAlign: "center",
   },
-  photoCountNumber: {
-    fontSize: 14,
-  },
+  photoCountNumber: {},
   errorText: {
     ...typography.caption,
-    fontSize: 13,
     textAlign: "center",
   },
 });

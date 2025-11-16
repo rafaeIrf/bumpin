@@ -1,6 +1,4 @@
-import { ArrowLeftIcon } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
-import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { Button } from "@/components/ui/button";
 import { spacing, typography } from "@/constants/theme";
@@ -22,10 +20,6 @@ export default function UserNameScreen() {
   const colors = useThemeColors();
   const [name, setName] = useState("");
 
-  const handleBack = () => {
-    router.back();
-  };
-
   const handleContinue = () => {
     if (name.trim()) {
       // TODO: Save user name to profile/storage
@@ -39,17 +33,7 @@ export default function UserNameScreen() {
   const isValid = name.trim().length > 0;
 
   return (
-    <BaseTemplateScreen
-      TopHeader={
-        <ScreenToolbar
-          leftAction={{
-            icon: ArrowLeftIcon,
-            onClick: handleBack,
-            ariaLabel: t("common.back"),
-          }}
-        />
-      }
-    >
+    <BaseTemplateScreen hasStackHeader>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -131,7 +115,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.md,
     justifyContent: "center",
   },
   header: {

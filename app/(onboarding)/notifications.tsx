@@ -90,7 +90,8 @@ export default function NotificationsScreen() {
   };
 
   return (
-    <BaseTemplateScreen>
+    <BaseTemplateScreen
+>
       <View style={styles.container}>
         {/* Notification Icon with sparkles */}
         <Animated.View

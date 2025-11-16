@@ -11,21 +11,17 @@ import {
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { useCustomBottomSheet } from "@/components/BottomSheetProvider/hooks";
 import { CategoryCard } from "@/components/category-card";
-import { ConnectedToolbarTitle } from "@/components/connected-toolbar-title";
 import { ConnectionBottomSheet } from "@/components/connection-bottom-sheet";
-import { GenericConfirmationBottomSheet } from "@/components/generic-confirmation-bottom-sheet";
-import { PlaceCardFeatured } from "@/components/place-card-featured";
 import PlaceSearchContent from "@/components/place-search-content";
 import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { typography } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-colors";
-import { t } from "@/modules/locales";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
-import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 interface ActivePlace {
   id: string;
@@ -150,11 +146,7 @@ const mockActivePlaces: ActivePlace[] = [
 export default function HomeScreen() {
   const colors = useThemeColors();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [activePlaces] = useState<ActivePlace[]>(mockActivePlaces);
   const [refreshing, setRefreshing] = useState(false);
-  const [connectedVenue, setConnectedVenue] = useState<string | null>(
-    "Bar do Zeca"
-  ); // Mock: usuário conectado
   const bottomSheet = useCustomBottomSheet();
 
   const handleCategoryClick = (category: Category) => {
@@ -201,37 +193,6 @@ export default function HomeScreen() {
     });
   };
 
-  const handleLeaveVenue = () => {
-    if (!bottomSheet) return;
-
-    bottomSheet.expand({
-      content: () => (
-        <GenericConfirmationBottomSheet
-          title={t("connectedBar.leaveConfirmation.title")}
-          description={t("connectedBar.leaveConfirmation.description")}
-          icon={MapPinIcon}
-          primaryButton={{
-            text: t("connectedBar.leaveConfirmation.disconnect"),
-            onClick: () => {
-              setConnectedVenue(null);
-              bottomSheet.close();
-              console.log("Disconnected from venue");
-            },
-            variant: "danger",
-          }}
-          secondaryButton={{
-            text: t("connectedBar.leaveConfirmation.cancel"),
-            onClick: () => bottomSheet.close(),
-            variant: "secondary",
-          }}
-          onClose={() => bottomSheet.close()}
-        />
-      ),
-      draggable: true,
-      snapPoints: ["45%"],
-    });
-  };
-
   const handleRefresh = async () => {
     setRefreshing(true);
     // TODO: Fetch real data
@@ -239,25 +200,6 @@ export default function HomeScreen() {
       setRefreshing(false);
     }, 1000);
   };
-
-  const renderActivePlace = ({
-    item,
-    index,
-  }: {
-    item: ActivePlace;
-    index: number;
-  }) => (
-    <Animated.View
-      entering={FadeInRight.delay(index * 100).springify()}
-      style={{ marginRight: 12 }}
-    >
-      <PlaceCardFeatured
-        place={item}
-        onClick={() => handlePlaceClick(item)}
-        index={index}
-      />
-    </Animated.View>
-  );
 
   const handleOpenSearch = () => {
     if (!bottomSheet) return;
@@ -284,17 +226,9 @@ export default function HomeScreen() {
             ariaLabel: "Filtros",
             color: colors.icon,
           }}
-          title={connectedVenue ? undefined : "Explorar"}
-          titleIcon={connectedVenue ? undefined : MapPinIcon}
+          title={"Explorar"}
+          titleIcon={MapPinIcon}
           titleIconColor={colors.accent}
-          customTitleView={
-            connectedVenue ? (
-              <ConnectedToolbarTitle
-                venueName={connectedVenue}
-                onPress={handleLeaveVenue}
-              />
-            ) : undefined
-          }
           rightActions={[
             {
               icon: SearchIcon,

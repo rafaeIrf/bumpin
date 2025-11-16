@@ -1,15 +1,11 @@
 import {
-  ArrowLeftIcon,
-  CheckIcon,
   FlameIcon,
   HeartIcon,
-  MessageCircleIcon,
   ShoppingBagIcon,
   UsersIcon,
 } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { ScreenBottomBar } from "@/components/screen-bottom-bar";
-import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { spacing, typography } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-colors";
@@ -18,48 +14,32 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
-export type IntentionOption =
-  | "friends"
-  | "casual"
-  | "chat"
-  | "networking"
-  | "dating";
+export type IntentionOption = "friends" | "casual" | "networking" | "dating";
 
 const intentionOptions: {
   value: IntentionOption;
   label: string;
   icon: React.ComponentType<{ width: number; height: number; color: string }>;
-  description: string;
 }[] = [
   {
     value: "friends",
     label: t("screens.onboarding.intentionFriends"),
     icon: UsersIcon,
-    description: t("screens.onboarding.intentionFriendsDesc"),
   },
   {
     value: "casual",
     label: t("screens.onboarding.intentionCasual"),
     icon: FlameIcon,
-    description: t("screens.onboarding.intentionCasualDesc"),
-  },
-  {
-    value: "chat",
-    label: t("screens.onboarding.intentionChat"),
-    icon: MessageCircleIcon,
-    description: t("screens.onboarding.intentionChatDesc"),
   },
   {
     value: "networking",
     label: t("screens.onboarding.intentionNetworking"),
     icon: ShoppingBagIcon,
-    description: t("screens.onboarding.intentionNetworkingDesc"),
   },
   {
     value: "dating",
     label: t("screens.onboarding.intentionDating"),
     icon: HeartIcon,
-    description: t("screens.onboarding.intentionDatingDesc"),
   },
 ];
 
@@ -93,15 +73,7 @@ export default function IntentionScreen() {
 
   return (
     <BaseTemplateScreen
-      TopHeader={
-        <ScreenToolbar
-          leftAction={{
-            icon: ArrowLeftIcon,
-            onClick: () => router.replace("/(onboarding)/connect-with"),
-            ariaLabel: t("common.back"),
-          }}
-        />
-      }
+      hasStackHeader
       BottomBar={
         <ScreenBottomBar
           primaryLabel={t("screens.onboarding.continue")}
@@ -136,8 +108,8 @@ export default function IntentionScreen() {
             >
               <View style={styles.optionContent}>
                 <option.icon
-                  width={32}
-                  height={32}
+                  width={24}
+                  height={24}
                   color={isSelected ? colors.accent : colors.textSecondary}
                 />
                 <View style={{ flex: 1, minWidth: 0 }}>
@@ -147,22 +119,7 @@ export default function IntentionScreen() {
                     >
                       {option.label}
                     </ThemedText>
-                    {isSelected && (
-                      <View
-                        style={[
-                          styles.checkIconContainer,
-                          { backgroundColor: colors.accent },
-                        ]}
-                      >
-                        <CheckIcon width={18} height={18} color="#fff" />
-                      </View>
-                    )}
                   </View>
-                  <ThemedText
-                    style={[styles.optionDesc, { color: colors.textSecondary }]}
-                  >
-                    {option.description}
-                  </ThemedText>
                 </View>
               </View>
             </Pressable>
@@ -188,16 +145,13 @@ export default function IntentionScreen() {
 const styles = StyleSheet.create({
   heading: {
     ...typography.heading,
-    fontSize: 26,
     marginBottom: spacing.sm,
-    textAlign: "center",
+    marginTop: spacing.md,
     paddingHorizontal: spacing.lg,
   },
   subtitle: {
     ...typography.body,
-    fontSize: 16,
-    marginBottom: spacing.xl,
-    textAlign: "center",
+    marginBottom: spacing.md,
     paddingHorizontal: spacing.lg,
   },
   optionsList: {
@@ -208,16 +162,14 @@ const styles = StyleSheet.create({
   optionButton: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: spacing.md,
-    borderRadius: 18,
+    borderRadius: spacing.md,
     borderWidth: 2,
-    padding: spacing.lg,
-    marginBottom: spacing.sm,
+    padding: spacing.md,
   },
   optionContent: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.md,
+    gap: spacing.sm,
     flex: 1,
   },
   optionLabelRow: {
@@ -229,25 +181,10 @@ const styles = StyleSheet.create({
   },
   optionLabel: {
     ...typography.body,
-    fontWeight: "600",
-    fontSize: 15,
     flex: 1,
-  },
-  checkIconContainer: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    marginLeft: 4,
-  },
-  optionDesc: {
-    ...typography.caption,
-    fontSize: 13,
   },
   selectedInfo: {
     ...typography.caption,
-    fontSize: 13,
     textAlign: "center",
     marginBottom: spacing.md,
     paddingHorizontal: spacing.lg,

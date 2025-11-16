@@ -5,6 +5,7 @@ import { GenderSelectionBottomSheetContent } from "@/components/gender-selection
 import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import ToggleSwitch from "@/components/toogle-switch";
 import { AgeRangeSlider } from "@/components/ui/age-range-slider";
 import { Button } from "@/components/ui/button";
 import { spacing, typography } from "@/constants/theme";
@@ -13,10 +14,6 @@ import { t } from "@/modules/locales";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  withSpring,
-} from "react-native-reanimated";
 
 export interface FilterValues {
   genderPreferences: string[];
@@ -224,28 +221,6 @@ interface ToggleSwitchProps {
   colors: ReturnType<typeof useThemeColors>;
 }
 
-const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
-  value,
-  onValueChange,
-  colors,
-}) => {
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: withSpring(value ? 24 : 0) }],
-  }));
-
-  return (
-    <Pressable
-      onPress={() => onValueChange(!value)}
-      style={[
-        styles.toggle,
-        { backgroundColor: value ? colors.accent : colors.border },
-      ]}
-    >
-      <Animated.View style={[styles.toggleThumb, animatedStyle]} />
-    </Pressable>
-  );
-};
-
 const styles = StyleSheet.create({
   section: {
     paddingHorizontal: spacing.lg,
@@ -287,18 +262,5 @@ const styles = StyleSheet.create({
   },
   toggleLabel: {
     ...typography.body,
-  },
-  toggle: {
-    width: 56,
-    height: 32,
-    borderRadius: 16,
-    padding: 4,
-    justifyContent: "center",
-  },
-  toggleThumb: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#FFFFFF",
   },
 });

@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, SmartphoneIcon } from "@/assets/icons";
+import { ArrowLeftIcon } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
@@ -7,7 +7,6 @@ import { spacing, typography } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { phoneAuthService } from "@/modules/auth/phone-auth-service";
 import { t } from "@/modules/locales";
-import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -18,7 +17,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function PhoneAuthScreen() {
   const colors = useThemeColors();
@@ -117,38 +116,20 @@ export default function PhoneAuthScreen() {
     }
   };
 
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
     <BaseTemplateScreen
       TopHeader={
         <ScreenToolbar
           leftAction={{
             icon: ArrowLeftIcon,
-            onClick: handleBack,
+            onClick: () => router.back(),
             ariaLabel: t("common.back"),
+            color: colors.icon,
           }}
         />
       }
     >
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        {/* Icon */}
-        <Animated.View
-          entering={FadeInUp.delay(100).duration(500)}
-          style={styles.iconContainer}
-        >
-          <LinearGradient
-            colors={["#1D9BF0", "#1A8CD8"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.iconGradient}
-          >
-            <SmartphoneIcon width={40} height={40} color="#FFFFFF" />
-          </LinearGradient>
-        </Animated.View>
-
         {/* Title */}
         <Animated.View
           entering={FadeInDown.delay(200).duration(500)}
@@ -267,9 +248,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...typography.heading,
-    fontSize: 28,
-    color: "#E7E9EA",
-    textAlign: "center",
   },
   subtitleContainer: {
     alignItems: "center",
@@ -278,7 +256,6 @@ const styles = StyleSheet.create({
   subtitle: {
     ...typography.body,
     color: "#8B98A5",
-    textAlign: "center",
   },
   inputContainer: {
     marginBottom: spacing.lg,

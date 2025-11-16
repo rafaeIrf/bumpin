@@ -71,7 +71,8 @@ export default function LocationScreen() {
   };
 
   return (
-    <BaseTemplateScreen>
+    <BaseTemplateScreen
+>
       <View style={styles.container}>
         {/* Location Icon */}
         <Animated.View

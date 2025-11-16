@@ -1,6 +1,5 @@
-import { ArrowLeftIcon, CalendarIcon } from "@/assets/icons";
+import { CalendarIcon } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
-import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { Button } from "@/components/ui/button";
 import { spacing, typography } from "@/constants/theme";
@@ -26,10 +25,6 @@ export default function UserAgeScreen() {
   const [birthDate, setBirthDate] = useState<Date | undefined>(undefined);
   const [dateText, setDateText] = useState("");
   const [showPicker, setShowPicker] = useState(false);
-
-  const handleBack = () => {
-    router.back();
-  };
 
   const calculateAge = (dateOfBirth: Date): number => {
     const today = new Date();
@@ -150,17 +145,7 @@ export default function UserAgeScreen() {
   minDate.setFullYear(maxDate.getFullYear() - 120);
 
   return (
-    <BaseTemplateScreen
-      TopHeader={
-        <ScreenToolbar
-          leftAction={{
-            icon: ArrowLeftIcon,
-            onClick: handleBack,
-            ariaLabel: t("common.back"),
-          }}
-        />
-      }
-    >
+    <BaseTemplateScreen hasStackHeader>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -273,7 +258,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.md,
     justifyContent: "center",
   },
   header: {

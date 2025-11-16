@@ -185,8 +185,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgba(47, 51, 54, 0.5)",
   },
   content: {
-    padding: 16,
-    paddingTop: 64, // Account for status bar (48px) + extra spacing
+    paddingBottom: 16,
+    paddingHorizontal: 16,
   },
   row: {
     flexDirection: "row",

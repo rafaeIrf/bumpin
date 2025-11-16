@@ -1,11 +1,5 @@
-import {
-  ArrowLeftIcon,
-  HeartIcon,
-  UserRoundIcon,
-  UsersIcon,
-} from "@/assets/icons";
+import { HeartIcon, UserRoundIcon, UsersIcon } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
-import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { Button } from "@/components/ui/button";
 import { spacing, typography } from "@/constants/theme";
@@ -81,17 +75,7 @@ export default function ConnectWithScreen(props: ConnectWithScreenProps) {
   const isValid = selectedOptions.length > 0;
 
   return (
-    <BaseTemplateScreen
-      TopHeader={
-        <ScreenToolbar
-          leftAction={{
-            icon: ArrowLeftIcon,
-            onClick: () => router.replace("/(onboarding)/user-gender"),
-            ariaLabel: t("common.back"),
-          }}
-        />
-      }
-    >
+    <BaseTemplateScreen hasStackHeader>
       <View style={styles.container}>
         <ThemedText style={[styles.heading, { color: colors.text }]}>
           {t("screens.onboarding.connectWithTitle")}
@@ -166,7 +150,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.md,
     paddingBottom: spacing.xxl,
   },
   heading: {

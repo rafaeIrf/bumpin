@@ -1,8 +1,6 @@
-import { ArrowLeftIcon } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { useCustomBottomSheet } from "@/components/BottomSheetProvider/hooks";
 import { GenderIdentityBottomSheet } from "@/components/gender-identity-bottom-sheet";
-import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { Button } from "@/components/ui/button";
 import { SelectionCard } from "@/components/ui/selection-card";
@@ -40,10 +38,6 @@ export default function UserGenderScreen() {
     },
   ];
 
-  const handleBack = () => {
-    router.back();
-  };
-
   const handleGenderSelect = (value: string) => {
     if (value === "Não binário") {
       bottomSheet?.expand({
@@ -77,17 +71,7 @@ export default function UserGenderScreen() {
   const isNonBinaryGender = gender && gender !== "Mulher" && gender !== "Homem";
 
   return (
-    <BaseTemplateScreen
-      TopHeader={
-        <ScreenToolbar
-          leftAction={{
-            icon: ArrowLeftIcon,
-            onClick: handleBack,
-            ariaLabel: t("common.back"),
-          }}
-        />
-      }
-    >
+    <BaseTemplateScreen hasStackHeader>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -171,7 +155,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.md,
     paddingBottom: spacing.xxl,
   },
   header: {

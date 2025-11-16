@@ -28,7 +28,7 @@ export default function RootIndex() {
     );
   }
 
-  return true ? (
+  return false ? (
     <Redirect href="/(tabs)/(home)" />
   ) : (
     <Redirect href="/(onboarding)/welcome" />

@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { spacing, typography } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { t } from "@/modules/locales";
+import { openPrivacyPolicy, openTermsOfUse } from "@/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import React from "react";
@@ -54,18 +55,16 @@ export default function WelcomeScreen() {
     console.log("Apple auth");
   };
 
-  const handleTermsPress = () => {
-    // TODO: Open terms of use
-    console.log("Terms of use");
+  const handleTermsPress = async () => {
+    await openTermsOfUse();
   };
 
-  const handlePrivacyPress = () => {
-    // TODO: Open privacy policy
-    console.log("Privacy policy");
+  const handlePrivacyPress = async () => {
+    await openPrivacyPolicy();
   };
 
   return (
-    <BaseTemplateScreen>
+    <BaseTemplateScreen scrollEnabled={false}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         {/* Illustration/Icon */}
         <Animated.View
@@ -111,13 +110,20 @@ export default function WelcomeScreen() {
           </ThemedText>
         </Animated.View>
 
-        {/* Subtitle */}
+        {/* Terms and Privacy - Moved above buttons */}
         <Animated.View
           entering={FadeInDown.delay(600).duration(500)}
-          style={styles.subtitleContainer}
+          style={styles.termsTopContainer}
         >
-          <ThemedText style={styles.subtitle}>
-            {t("screens.onboarding.subtitle")}
+          <ThemedText style={styles.termsTopText}>
+            {t("screens.onboarding.termsPrefix")}{" "}
+            <ThemedText onPress={handleTermsPress} style={styles.termsLink}>
+              {t("screens.onboarding.terms")}
+            </ThemedText>{" "}
+            {t("screens.onboarding.termsAnd")}{" "}
+            <ThemedText onPress={handlePrivacyPress} style={styles.termsLink}>
+              {t("screens.onboarding.privacy")}
+            </ThemedText>
           </ThemedText>
         </Animated.View>
 
@@ -150,23 +156,6 @@ export default function WelcomeScreen() {
           >
             {t("screens.onboarding.appleAuth")}
           </Button>
-        </Animated.View>
-
-        {/* Terms and Privacy */}
-        <Animated.View
-          entering={FadeInDown.delay(1000).duration(500)}
-          style={styles.termsContainer}
-        >
-          <ThemedText style={styles.termsText}>
-            {t("screens.onboarding.termsPrefix")}{" "}
-            <ThemedText onPress={handleTermsPress} style={styles.termsLink}>
-              {t("screens.onboarding.terms")}
-            </ThemedText>{" "}
-            {t("screens.onboarding.termsAnd")}{" "}
-            <ThemedText onPress={handlePrivacyPress} style={styles.termsLink}>
-              {t("screens.onboarding.privacy")}
-            </ThemedText>
-          </ThemedText>
         </Animated.View>
       </View>
     </BaseTemplateScreen>
@@ -205,13 +194,13 @@ const styles = StyleSheet.create({
   },
   floatingIconTopRight: {
     position: "absolute",
-    top: -16,
-    right: -16,
+    top: 16,
+    right: 16,
   },
   floatingIconBottomLeft: {
     position: "absolute",
-    bottom: -16,
-    left: -16,
+    bottom: 16,
+    left: 16,
   },
   floatingIconCircle: {
     width: 64,
@@ -224,16 +213,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   titleContainer: {
-    marginBottom: spacing.md,
+    marginBottom: spacing.xl,
     alignItems: "center",
   },
   title: {
     ...typography.heading,
-    fontSize: 32,
-    fontWeight: "600",
-    color: "#E7E9EA",
     textAlign: "center",
-    lineHeight: 40,
   },
   subtitleContainer: {
     marginBottom: spacing.xxl,
@@ -243,13 +228,21 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: "#8B98A5",
     textAlign: "center",
-    lineHeight: 24,
+  },
+  termsTopContainer: {
+    maxWidth: 400,
+    marginBottom: spacing.xl,
+    paddingHorizontal: spacing.md,
+  },
+  termsTopText: {
+    ...typography.body,
+    color: "#E7E9EA",
+    textAlign: "center",
+    lineHeight: 22,
   },
   buttonsContainer: {
     width: "100%",
-    maxWidth: 400,
     gap: spacing.sm,
-    marginBottom: spacing.lg,
   },
   primaryButton: {
     minHeight: 56,
@@ -265,23 +258,12 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     ...typography.body,
-    fontWeight: "600",
   },
   secondaryButtonText: {
     ...typography.body,
   },
-  termsContainer: {
-    maxWidth: 400,
-    marginTop: spacing.md,
-  },
-  termsText: {
-    ...typography.caption,
-    color: "#5B6671",
-    textAlign: "center",
-    opacity: 0.6,
-  },
   termsLink: {
+    ...typography.body,
     color: "#1D9BF0",
-    textDecorationLine: "underline",
   },
 });
