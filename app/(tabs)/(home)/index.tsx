@@ -3,6 +3,7 @@ import {
   CoffeeIcon,
   DumbbellIcon,
   FlameIcon,
+  HeartIcon,
   MapPinIcon,
   SearchIcon,
   SlidersHorizontalIcon,
@@ -10,21 +11,17 @@ import {
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { useCustomBottomSheet } from "@/components/BottomSheetProvider/hooks";
 import { CategoryCard } from "@/components/category-card";
-import { ConnectedToolbarTitle } from "@/components/connected-toolbar-title";
 import { ConnectionBottomSheet } from "@/components/connection-bottom-sheet";
-import { GenericConfirmationBottomSheet } from "@/components/generic-confirmation-bottom-sheet";
-import { PlaceCardFeatured } from "@/components/place-card-featured";
 import PlaceSearchContent from "@/components/place-search-content";
 import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { typography } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-colors";
-import { t } from "@/modules/locales";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
-import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
+import { StyleSheet } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
 interface ActivePlace {
   id: string;
@@ -40,47 +37,65 @@ interface Category {
   icon: React.ComponentType<{ width: number; height: number; color: string }>;
   title: string;
   description: string;
-  gradient: [string, string];
+  iconColor: string;
+  iconBgColor: string;
   types: string[];
-  categoryIcon: string;
 }
 
 const categories: Category[] = [
   {
+    id: "hightlighted",
+    icon: FlameIcon,
+    title: "Movimentados Agora",
+    description: "Lugares cheios e com gente se conectando.",
+    iconColor: "#FF6B35",
+    iconBgColor: "rgba(41, 151, 255, 0.12)",
+    types: ["bar", "night_club"],
+  },
+  {
+    id: "favorites",
+    icon: HeartIcon,
+    title: "Locais Favoritos",
+    description: "Seus lugares preferidos para se conectar.",
+    iconColor: "#FFFFFF",
+    iconBgColor: "rgba(41, 151, 255, 0.12)",
+    types: ["bar", "night_club"],
+  },
+  {
     id: "nightlife",
     icon: BeerIcon,
-    title: "Rolês & Noitadas",
+    title: "Bares & Baladas",
     description: "Pra sair e conhecer gente nova.",
-    gradient: ["#F39C12", "#D35400"],
+    iconColor: "#FF8A33",
+    iconBgColor: "rgba(255, 138, 51, 0.12)",
     types: ["bar", "night_club"],
-    categoryIcon: "🍸",
   },
   {
     id: "cafes",
     icon: CoffeeIcon,
     title: "Cafés & Bate-Papo",
     description: "Lugares pra conversar e relaxar.",
-    gradient: ["#8E6E53", "#5C4033"],
+    iconColor: "#9B6C4A",
+    iconBgColor: "rgba(155, 108, 74, 0.12)",
     types: ["cafe"],
-    categoryIcon: "☕",
   },
   {
     id: "university",
     icon: MapPinIcon,
     title: "Vida Universitária",
     description: "Onde os encontros acontecem na rotina.",
-    gradient: ["#3498DB", "#2C3E50"],
+    iconColor: "#3DAAFF",
+    iconBgColor: "rgba(61, 170, 255, 0.12)",
     types: ["university"],
-    categoryIcon: "🎓",
   },
   {
     id: "fitness",
     icon: DumbbellIcon,
     title: "Bem-estar & Movimento",
     description: "Conexões que começam no treino.",
-    gradient: ["#27AE60", "#145A32"],
+    iconColor: "#1DB954",
+    iconBgColor: "rgba(29, 185, 84, 0.12)",
     types: ["gym"],
-    categoryIcon: "🏋️",
   },
 ];
 
@@ -131,11 +146,7 @@ const mockActivePlaces: ActivePlace[] = [
 export default function HomeScreen() {
   const colors = useThemeColors();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [activePlaces] = useState<ActivePlace[]>(mockActivePlaces);
   const [refreshing, setRefreshing] = useState(false);
-  const [connectedVenue, setConnectedVenue] = useState<string | null>(
-    "Bar do Zeca"
-  ); // Mock: usuário conectado
   const bottomSheet = useCustomBottomSheet();
 
   const handleCategoryClick = (category: Category) => {
@@ -182,37 +193,6 @@ export default function HomeScreen() {
     });
   };
 
-  const handleLeaveVenue = () => {
-    if (!bottomSheet) return;
-
-    bottomSheet.expand({
-      content: () => (
-        <GenericConfirmationBottomSheet
-          title={t("connectedBar.leaveConfirmation.title")}
-          description={t("connectedBar.leaveConfirmation.description")}
-          icon={MapPinIcon}
-          primaryButton={{
-            text: t("connectedBar.leaveConfirmation.disconnect"),
-            onClick: () => {
-              setConnectedVenue(null);
-              bottomSheet.close();
-              console.log("Disconnected from venue");
-            },
-            variant: "danger",
-          }}
-          secondaryButton={{
-            text: t("connectedBar.leaveConfirmation.cancel"),
-            onClick: () => bottomSheet.close(),
-            variant: "secondary",
-          }}
-          onClose={() => bottomSheet.close()}
-        />
-      ),
-      draggable: true,
-      snapPoints: ["45%"],
-    });
-  };
-
   const handleRefresh = async () => {
     setRefreshing(true);
     // TODO: Fetch real data
@@ -220,25 +200,6 @@ export default function HomeScreen() {
       setRefreshing(false);
     }, 1000);
   };
-
-  const renderActivePlace = ({
-    item,
-    index,
-  }: {
-    item: ActivePlace;
-    index: number;
-  }) => (
-    <Animated.View
-      entering={FadeInRight.delay(index * 100).springify()}
-      style={{ marginRight: 12 }}
-    >
-      <PlaceCardFeatured
-        place={item}
-        onClick={() => handlePlaceClick(item)}
-        index={index}
-      />
-    </Animated.View>
-  );
 
   const handleOpenSearch = () => {
     if (!bottomSheet) return;
@@ -261,21 +222,13 @@ export default function HomeScreen() {
         <ScreenToolbar
           leftAction={{
             icon: SlidersHorizontalIcon,
-            onClick: () => {},
-            ariaLabel: "Voltar",
+            onClick: () => router.push("main/filters" as any),
+            ariaLabel: "Filtros",
             color: colors.icon,
           }}
-          title={connectedVenue ? undefined : "Explorar"}
-          titleIcon={connectedVenue ? undefined : MapPinIcon}
+          title={"Explorar"}
+          titleIcon={MapPinIcon}
           titleIconColor={colors.accent}
-          customTitleView={
-            connectedVenue ? (
-              <ConnectedToolbarTitle
-                venueName={connectedVenue}
-                onPress={handleLeaveVenue}
-              />
-            ) : undefined
-          }
           rightActions={[
             {
               icon: SearchIcon,
@@ -290,47 +243,6 @@ export default function HomeScreen() {
       onRefresh={handleRefresh}
     >
       <ThemedView>
-        {/* Connected Bar removed - integrated into toolbar */}
-
-        <Animated.View entering={FadeInDown.delay(0).springify()}>
-          <ThemedView style={styles.section}>
-            <ThemedView style={styles.sectionHeader}>
-              <FlameIcon width={18} height={18} color={colors.error} />
-              <ThemedText style={[styles.sectionTitle, { color: colors.text }]}>
-                Lugares com pessoas agora
-              </ThemedText>
-            </ThemedView>
-
-            {activePlaces.length > 0 ? (
-              <FlatList
-                horizontal
-                data={activePlaces}
-                renderItem={renderActivePlace}
-                keyExtractor={(item) => item.id}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 16 }}
-              />
-            ) : (
-              <ThemedView
-                style={[
-                  styles.emptyCard,
-                  {
-                    backgroundColor: colors.surface,
-                    borderColor: colors.border,
-                  },
-                ]}
-              >
-                <ThemedText
-                  style={[styles.emptyText, { color: colors.textSecondary }]}
-                >
-                  Ainda não há pessoas conectadas por perto. Que tal ser o
-                  primeiro a aparecer? 👀
-                </ThemedText>
-              </ThemedView>
-            )}
-          </ThemedView>
-        </Animated.View>
-
         {/* Title Section */}
         <Animated.View entering={FadeInDown.delay(200).springify()}>
           <ThemedView style={[styles.section, { paddingTop: 8 }]}>

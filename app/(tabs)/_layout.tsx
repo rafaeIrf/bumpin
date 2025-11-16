@@ -30,8 +30,7 @@ export default function TabLayout() {
           paddingBottom: Math.max(18, insets.bottom),
           paddingTop: 10,
           backgroundColor: Colors[colorScheme ?? "light"].background,
-          borderTopColor: Colors[colorScheme ?? "light"].border,
-          borderTopWidth: 1,
+          borderTopWidth: 0,
         },
       }}
     >

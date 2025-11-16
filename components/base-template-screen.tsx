@@ -5,6 +5,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /**
  * Base template for all screens in the app.
@@ -60,6 +61,10 @@ interface BaseTemplateScreenProps {
   // Scroll configuration
   scrollEnabled?: boolean;
   showsVerticalScrollIndicator?: boolean;
+
+  // Whether the screen has a Stack header (e.g., onboarding screens with progress bar)
+  // If true, won't add paddingTop for safe area (header already handles it)
+  hasStackHeader?: boolean;
 }
 
 export function BaseTemplateScreen({
@@ -72,8 +77,10 @@ export function BaseTemplateScreen({
   contentContainerStyle,
   scrollEnabled = true,
   showsVerticalScrollIndicator = false,
+  hasStackHeader = false,
 }: BaseTemplateScreenProps) {
   const scrollY = useSharedValue(0);
+  const insets = useSafeAreaInsets();
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -93,7 +100,14 @@ export function BaseTemplateScreen({
   };
 
   return (
-    <View style={[styles.wrapper, containerStyle]}>
+    <View
+      style={[
+        styles.wrapper,
+        containerStyle,
+        // Only add paddingTop if there's no Stack header (Stack header already handles safe area)
+        hasStackHeader ? undefined : { paddingTop: insets.top },
+      ]}
+    >
       {/* Always show a light status bar (our theme is dark) */}
       <StatusBar
         style="light"
@@ -146,19 +160,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingTop: 136, // Space for toolbar (64px content + 48px status bar)
     paddingBottom: 32,
   },
   contentWithBottomBar: {
     paddingBottom: 120, // Extra space for bottom bar
   },
-  headerContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 10,
-  },
+  headerContainer: {},
   bottomBarContainer: {
     position: "absolute",
     bottom: 0,

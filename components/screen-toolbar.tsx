@@ -1,7 +1,6 @@
 import { typography } from "@/constants/theme";
-import { BlurView } from "expo-blur";
 import { ComponentType } from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   SharedValue,
   interpolate,
@@ -32,7 +31,6 @@ interface ScreenToolbarProps {
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export function ScreenToolbar({
   leftAction,
@@ -59,7 +57,7 @@ export function ScreenToolbar({
     const backgroundColor = interpolate(
       scrollY.value,
       [0, 50],
-      [0, 0.4],
+      [0, 0.8],
       "clamp"
     );
 
@@ -95,82 +93,47 @@ export function ScreenToolbar({
         style={[StyleSheet.absoluteFill, animatedBackgroundStyle]}
       />
 
-      {/* Animated blur layer */}
-      <AnimatedBlurView
-        intensity={80}
-        tint="systemMaterialDark"
-        experimentalBlurMethod={
-          Platform.OS === "android" ? "dimezisBlurView" : undefined
-        }
-        style={[StyleSheet.absoluteFill, { opacity: 1 }]}
-      />
-
       {/* Content */}
       <View style={styles.content}>
         <View style={styles.row}>
           {/* Left Action */}
-          {leftAction ? (
-            <ActionButton
-              icon={leftAction.icon}
-              onPress={leftAction.onClick}
-              ariaLabel={leftAction.ariaLabel}
-              color={leftAction.color}
-            />
-          ) : (
-            // If no left icon, show title left-aligned
-            <View
-              style={[
-                styles.titleContainer,
-                { flex: 1, justifyContent: "flex-start" },
-              ]}
-            >
-              {customTitleView ? (
-                customTitleView
-              ) : (
-                <>
-                  {titleIcon &&
-                    (() => {
-                      const TitleIcon = titleIcon;
-                      return (
-                        <TitleIcon
-                          width={20}
-                          height={20}
-                          color={titleIconColor}
-                        />
-                      );
-                    })()}
-                  <Text style={styles.title}>{title}</Text>
-                </>
-              )}
-            </View>
-          )}
+          <View style={styles.sideContainer}>
+            {leftAction && (
+              <ActionButton
+                icon={leftAction.icon}
+                onPress={leftAction.onClick}
+                ariaLabel={leftAction.ariaLabel}
+                color={leftAction.color}
+              />
+            )}
+          </View>
 
-          {/* Title (centered only if leftAction exists) */}
-          {leftAction && (
-            <View style={styles.titleContainer}>
-              {customTitleView ? (
-                customTitleView
-              ) : (
-                <>
-                  {titleIcon &&
-                    (() => {
-                      const TitleIcon = titleIcon;
-                      return (
-                        <TitleIcon
-                          width={20}
-                          height={20}
-                          color={titleIconColor}
-                        />
-                      );
-                    })()}
-                  <Text style={styles.title}>{title}</Text>
-                </>
-              )}
-            </View>
-          )}
+          {/* Title - Always centered */}
+          <View style={styles.titleCenterContainer}>
+            {customTitleView ? (
+              customTitleView
+            ) : (
+              <>
+                {titleIcon &&
+                  (() => {
+                    const TitleIcon = titleIcon;
+                    return (
+                      <TitleIcon
+                        width={20}
+                        height={20}
+                        color={titleIconColor}
+                      />
+                    );
+                  })()}
+                <Text style={styles.title}>{title}</Text>
+              </>
+            )}
+          </View>
 
           {/* Right Actions */}
-          <View style={styles.rightActions}>{renderRightActions()}</View>
+          <View style={[styles.sideContainer, styles.rightActions]}>
+            {renderRightActions()}
+          </View>
         </View>
       </View>
     </View>
@@ -222,13 +185,28 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgba(47, 51, 54, 0.5)",
   },
   content: {
-    padding: 16,
-    paddingTop: 64, // Account for status bar (48px) + extra spacing
+    paddingBottom: 16,
+    paddingHorizontal: 16,
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  sideContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  titleCenterContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    pointerEvents: "none",
   },
   actionButton: {
     width: 40,
@@ -253,6 +231,7 @@ const styles = StyleSheet.create({
   rightActions: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-end",
     gap: 8,
   },
   compactToggleButton: {

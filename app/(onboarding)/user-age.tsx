@@ -1,13 +1,13 @@
-import { ArrowLeftIcon, CalendarIcon } from "@/assets/icons";
+import { CalendarIcon } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
-import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { Button } from "@/components/ui/button";
 import { spacing, typography } from "@/constants/theme";
+import { useOnboardingFlow } from "@/hooks/use-onboarding-flow";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { t } from "@/modules/locales";
+import { onboardingActions } from "@/modules/store/slices/onboardingActions";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -20,16 +20,12 @@ import {
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
 export default function UserAgeScreen() {
-  const router = useRouter();
   const colors = useThemeColors();
+  const { userData, completeCurrentStep } = useOnboardingFlow();
 
   const [birthDate, setBirthDate] = useState<Date | undefined>(undefined);
   const [dateText, setDateText] = useState("");
   const [showPicker, setShowPicker] = useState(false);
-
-  const handleBack = () => {
-    router.back();
-  };
 
   const calculateAge = (dateOfBirth: Date): number => {
     const today = new Date();
@@ -125,12 +121,10 @@ export default function UserAgeScreen() {
   };
 
   const handleContinue = () => {
-    if (isValid) {
-      // TODO: Save birthdate to profile/storage
-      console.log("Birth date:", birthDate);
-
-      // Navigate to next onboarding step (gender selection)
-      router.push("/(onboarding)/user-gender" as any);
+    if (isValid && birthDate) {
+      const age = calculateAge(birthDate);
+      onboardingActions.setUserAge(age);
+      completeCurrentStep("user-age");
     }
   };
 
@@ -150,17 +144,7 @@ export default function UserAgeScreen() {
   minDate.setFullYear(maxDate.getFullYear() - 120);
 
   return (
-    <BaseTemplateScreen
-      TopHeader={
-        <ScreenToolbar
-          leftAction={{
-            icon: ArrowLeftIcon,
-            onClick: handleBack,
-            ariaLabel: t("common.back"),
-          }}
-        />
-      }
-    >
+    <BaseTemplateScreen hasStackHeader>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -273,7 +257,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.md,
     justifyContent: "center",
   },
   header: {

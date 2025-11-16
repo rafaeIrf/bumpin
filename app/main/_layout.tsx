@@ -17,6 +17,13 @@ export default function MainLayout() {
           presentation: "card",
         }}
       />
+      <Stack.Screen
+        name="filters"
+        options={{
+          headerShown: false,
+          presentation: "modal",
+        }}
+      />
     </Stack>
   );
 }

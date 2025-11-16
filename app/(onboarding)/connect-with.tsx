@@ -1,17 +1,12 @@
-import {
-  ArrowLeftIcon,
-  HeartIcon,
-  UserRoundIcon,
-  UsersIcon,
-} from "@/assets/icons";
+import { HeartIcon, UserRoundIcon, UsersIcon } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
-import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
 import { Button } from "@/components/ui/button";
 import { spacing, typography } from "@/constants/theme";
+import { useOnboardingFlow } from "@/hooks/use-onboarding-flow";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { t } from "@/modules/locales";
-import { router } from "expo-router";
+import { onboardingActions } from "@/modules/store/slices/onboardingActions";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -48,8 +43,9 @@ const connectOptions: {
 
 export default function ConnectWithScreen(props: ConnectWithScreenProps) {
   const colors = useThemeColors();
+  const { userData, completeCurrentStep } = useOnboardingFlow();
   const [selectedOptions, setSelectedOptions] = useState<ConnectWithOption[]>(
-    []
+    (userData.connectWith as ConnectWithOption[]) || []
   );
 
   const handleOptionToggle = (value: ConnectWithOption) => {
@@ -72,26 +68,15 @@ export default function ConnectWithScreen(props: ConnectWithScreenProps) {
 
   const handleContinue = () => {
     if (selectedOptions.length > 0) {
-      // TODO: Save to user profile or context
-      // updateUserData({ connectWith: selectedOptions });
-      router.replace("/(onboarding)/intention");
+      onboardingActions.setConnectWith(selectedOptions);
+      completeCurrentStep("connect-with");
     }
   };
 
   const isValid = selectedOptions.length > 0;
 
   return (
-    <BaseTemplateScreen
-      TopHeader={
-        <ScreenToolbar
-          leftAction={{
-            icon: ArrowLeftIcon,
-            onClick: () => router.replace("/(onboarding)/user-gender"),
-            ariaLabel: t("common.back"),
-          }}
-        />
-      }
-    >
+    <BaseTemplateScreen hasStackHeader>
       <View style={styles.container}>
         <ThemedText style={[styles.heading, { color: colors.text }]}>
           {t("screens.onboarding.connectWithTitle")}
@@ -166,7 +151,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.md,
     paddingBottom: spacing.xxl,
   },
   heading: {

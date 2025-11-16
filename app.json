@@ -43,7 +43,8 @@
             }
           }
         }
-      }
+      },
+      "appleTeamId": "V68Y42WV27"
     },
     "android": {
       "adaptiveIcon": {
@@ -54,7 +55,10 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "googleServicesFile": "./google-services.json",
-      "package": "com.bumpti"
+      "package": "com.bumpti",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "output": "static",
