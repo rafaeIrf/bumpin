@@ -188,7 +188,6 @@ export default function NotificationsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: spacing.lg,
     paddingVertical: spacing.lg,
     justifyContent: "center",
     alignItems: "center",
@@ -223,7 +222,6 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: "center",
     marginBottom: spacing.sm,
-    paddingHorizontal: spacing.md,
   },
   title: {
     ...typography.heading,
@@ -233,7 +231,6 @@ const styles = StyleSheet.create({
   subtitleContainer: {
     alignItems: "center",
     marginBottom: spacing.xxl,
-    paddingHorizontal: spacing.md,
   },
   subtitle: {
     ...typography.body,

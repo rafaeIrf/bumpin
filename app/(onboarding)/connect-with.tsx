@@ -150,7 +150,6 @@ export default function ConnectWithScreen(props: ConnectWithScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: spacing.lg,
     paddingTop: spacing.md,
     paddingBottom: spacing.xxl,
   },

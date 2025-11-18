@@ -69,7 +69,7 @@ export function PlaceLoadingSkeleton({ count = 6 }: PlaceLoadingSkeletonProps) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: spacing.md,
+    paddingVertical: spacing.md,
     gap: spacing.sm,
   },
   card: {

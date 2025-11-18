@@ -223,9 +223,7 @@ export default function ProfileScreen() {
           <View style={styles.profileInfo}>
             <ThemedText style={[typography.body1, { color: colors.text }]}>
               {userData.name || t("screens.profile.title")}
-              {userData.age
-                ? `, ${t("screens.profile.yearsOld", { age: userData.age })}`
-                : ""}
+              {userData.age ? `, ${userData.age}` : ""}
             </ThemedText>
 
             <Button
@@ -403,7 +401,7 @@ const styles = StyleSheet.create({
   profileHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.lg,
+    gap: spacing.md,
   },
   photoContainer: {
     flexShrink: 0,
@@ -430,7 +428,7 @@ const styles = StyleSheet.create({
   },
   profileButton: {
     alignSelf: "flex-start",
-    marginTop: spacing.xs,
+    marginTop: spacing.sm,
   },
   actionCardsContainer: {
     flexDirection: "row",

@@ -382,8 +382,8 @@ const styles = StyleSheet.create({
   },
   categoryColumnWrapper: {
     justifyContent: "flex-start",
-    marginBottom: 16,
-    gap: 16,
+    marginBottom: 4,
+    gap: 4,
   },
   categoryItem: {
     width: "48%",

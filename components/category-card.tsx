@@ -58,7 +58,6 @@ export function CategoryCard({
     opacity.value = withSpring(0);
   };
 
-  const Icon = category.icon;
   const renderIllustration = () => {
     if (!illustration) return null;
 
@@ -175,11 +174,10 @@ export const CARD_COLORS = {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 16,
+    borderRadius: 10,
     overflow: "hidden",
     width: "100%",
-    marginBottom: spacing.md,
-    minHeight: 200,
+    minHeight: 250,
     shadowColor: "#000000",
     shadowOpacity: 0.3,
     shadowRadius: 20,
@@ -187,9 +185,9 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   cardBackground: {
-    borderRadius: 16,
+    borderRadius: 10,
     overflow: "hidden",
-    minHeight: 200,
+    minHeight: 250,
     position: "relative",
   },
   hoverOverlay: {

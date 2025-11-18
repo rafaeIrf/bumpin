@@ -69,7 +69,7 @@ export function OnboardingProgressBar({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
   },
   track: {
