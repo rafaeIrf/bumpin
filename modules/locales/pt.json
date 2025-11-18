@@ -24,7 +24,6 @@
       },
       "premium": {
         "title": "Seja Premium",
-        "subtitle": "Acesso ilimitado",
         "description": "Acesse recursos exclusivos e desbloqueie todo o potencial do app.",
         "cta": "Conhecer planos"
       },
@@ -41,6 +40,86 @@
         "turboWeekly": "Turbo+ (5/semana)",
         "earlyCheckinWeekly": "Early Checkin (5/semana)",
         "pingsWeekly": "Pings (5/semana)"
+      },
+      "powerUps": {
+        "earlyCheckin": {
+          "title": "Early Checkin",
+          "subtitle": "Apareça no local antes de chegar.",
+          "premiumHint": "Early Checkin ilimitado no Bumpti Premium.",
+          "purchaseCta": "Comprar {{quantity}} Early Checkin",
+          "upgradeCta": "Assinar Premium",
+          "close": "Fechar",
+          "optionLabel": "{{quantity}} Early Checkin",
+          "options": {
+            "single": {
+              "price": "R$ 9,90",
+              "subtitle": "Uso único"
+            },
+            "bundle": {
+              "price": "R$ 39,90",
+              "subtitle": "Economize 20%"
+            },
+            "max": {
+              "price": "R$ 69,90",
+              "subtitle": "Melhor custo por uso"
+            }
+          },
+          "badges": {
+            "popular": "Mais popular"
+          }
+        },
+        "pings": {
+          "title": "Pings",
+          "subtitle": "Envie sinais prioritários e chame atenção na hora.",
+          "premiumHint": "Pings ilimitados no Bumpti Premium.",
+          "purchaseCta": "Comprar {{quantity}} Pings",
+          "upgradeCta": "Assinar Premium",
+          "close": "Fechar",
+          "optionLabel": "{{quantity}} Pings",
+          "options": {
+            "single": {
+              "price": "R$ 6,90",
+              "subtitle": "Impulso único"
+            },
+            "bundle": {
+              "price": "R$ 24,90",
+              "subtitle": "Economize 25%"
+            },
+            "max": {
+              "price": "R$ 44,90",
+              "subtitle": "Melhor valor"
+            }
+          },
+          "badges": {
+            "popular": "Mais popular"
+          }
+        },
+        "turbo": {
+          "title": "Turbo+",
+          "subtitle": "Impulsione seu perfil para o topo do local.",
+          "premiumHint": "Pacotes Turbo+ incluídos semanalmente no Premium.",
+          "purchaseCta": "Comprar {{quantity}} Turbo+",
+          "upgradeCta": "Assinar Premium",
+          "close": "Fechar",
+          "optionLabel": "{{quantity}} Turbo+",
+          "options": {
+            "single": {
+              "price": "R$ 14,90",
+              "subtitle": "Impulso instantâneo"
+            },
+            "bundle": {
+              "price": "R$ 39,90",
+              "subtitle": "Economize 30%"
+            },
+            "max": {
+              "price": "R$ 64,90",
+              "subtitle": "Maior exposição"
+            }
+          },
+          "badges": {
+            "popular": "Mais popular"
+          }
+        }
       }
     },
     "premiumPaywall": {

@@ -41,6 +41,8 @@ export function ScreenToolbar({
   scrollY,
   customTitleView,
 }: ScreenToolbarProps) {
+  const hasLeftAction = Boolean(leftAction);
+
   const animatedBlurStyle = useAnimatedStyle(() => {
     if (!scrollY) return { opacity: 0 };
 
@@ -109,7 +111,12 @@ export function ScreenToolbar({
           </View>
 
           {/* Title - Always centered */}
-          <View style={styles.titleCenterContainer}>
+          <View
+            style={[
+              styles.titleCenterContainer,
+              !hasLeftAction && styles.titleLeftAligned,
+            ]}
+          >
             {customTitleView ? (
               customTitleView
             ) : (
@@ -125,7 +132,14 @@ export function ScreenToolbar({
                       />
                     );
                   })()}
-                <Text style={styles.title}>{title}</Text>
+                <Text
+                  style={[
+                    styles.title,
+                    !hasLeftAction && { ...typography.subheading },
+                  ]}
+                >
+                  {title}
+                </Text>
               </>
             )}
           </View>
@@ -181,8 +195,8 @@ function ActionButton({
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(47, 51, 54, 0.5)",
+    // borderBottomWidth: 1,
+    // borderBottomColor: "rgba(47, 51, 54, 0.5)",
   },
   content: {
     paddingBottom: 16,
@@ -207,6 +221,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
     pointerEvents: "none",
+  },
+  titleLeftAligned: {
+    justifyContent: "flex-start",
   },
   actionButton: {
     width: 40,
