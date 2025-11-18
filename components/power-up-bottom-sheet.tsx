@@ -157,7 +157,7 @@ export function PowerUpBottomSheet({
                 <View style={styles.optionTextContainer}>
                   <ThemedText
                     style={[
-                      typography.bodyBold,
+                      typography.body1,
                       { color: colors.text, marginBottom: spacing.xs },
                     ]}
                   >
@@ -181,7 +181,7 @@ export function PowerUpBottomSheet({
 
                 <View style={styles.priceColumn}>
                   <ThemedText
-                    style={[typography.bodyBold, { color: colors.text }]}
+                    style={[typography.body1, { color: colors.text }]}
                   >
                     {option.price}
                   </ThemedText>

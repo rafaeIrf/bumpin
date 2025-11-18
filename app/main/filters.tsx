@@ -223,7 +223,6 @@ interface ToggleSwitchProps {
 
 const styles = StyleSheet.create({
   section: {
-    paddingHorizontal: spacing.lg,
     paddingVertical: spacing.xl,
     borderBottomWidth: 1,
   },

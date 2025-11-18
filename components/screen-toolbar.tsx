@@ -135,7 +135,7 @@ export function ScreenToolbar({
                 <Text
                   style={[
                     styles.title,
-                    !hasLeftAction && { ...typography.subheading },
+                    !hasLeftAction && { ...typography.heading },
                   ]}
                 >
                   {title}

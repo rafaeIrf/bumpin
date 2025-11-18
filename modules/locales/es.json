@@ -122,6 +122,9 @@
         }
       }
     },
+    "home": {
+      "peopleBadge": "{{count}} personas"
+    },
     "premiumPaywall": {
       "badge": "BUMPTI PREMIUM",
       "title": "Tu upgrade para encuentros reales",

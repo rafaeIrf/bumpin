@@ -197,7 +197,7 @@ export default function ProfileScreen() {
         />
       }
     >
-      <View style={[styles.content, { paddingHorizontal: spacing.lg }]}>
+      <View style={[styles.content]}>
         {/* Profile Header */}
         <Animated.View
           entering={FadeInDown.duration(400)}
@@ -221,7 +221,7 @@ export default function ProfileScreen() {
 
           {/* Profile Info */}
           <View style={styles.profileInfo}>
-            <ThemedText style={[typography.bodyBold, { color: colors.text }]}>
+            <ThemedText style={[typography.body1, { color: colors.text }]}>
               {userData.name || t("screens.profile.title")}
               {userData.age
                 ? `, ${t("screens.profile.yearsOld", { age: userData.age })}`
@@ -279,7 +279,7 @@ export default function ProfileScreen() {
                 </View>
                 <View style={styles.premiumTextContainer}>
                   <ThemedText
-                    style={[typography.bodyBold, { color: colors.text }]}
+                    style={[typography.body1, { color: colors.text }]}
                   >
                     {t("screens.profile.premium.title")}
                   </ThemedText>
