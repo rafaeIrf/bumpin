@@ -200,18 +200,15 @@ const styles = StyleSheet.create({
     ...typography.heading,
     marginBottom: spacing.sm,
     marginTop: spacing.md,
-    paddingHorizontal: spacing.lg,
   },
   subtitle: {
     ...typography.body,
     marginBottom: spacing.xl,
-    paddingHorizontal: spacing.lg,
   },
   gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    paddingHorizontal: spacing.lg,
     marginBottom: spacing.lg,
   },
   photoSlot: {

@@ -142,17 +142,14 @@ const styles = StyleSheet.create({
     ...typography.heading,
     marginBottom: spacing.sm,
     marginTop: spacing.md,
-    paddingHorizontal: spacing.lg,
   },
   subtitle: {
     ...typography.body,
     marginBottom: spacing.md,
-    paddingHorizontal: spacing.lg,
   },
   optionsList: {
     gap: spacing.md,
     marginBottom: spacing.lg,
-    paddingHorizontal: spacing.lg,
   },
   optionButton: {
     flexDirection: "row",

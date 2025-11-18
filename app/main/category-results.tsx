@@ -260,7 +260,6 @@ export default function CategoryResultsScreen() {
 const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: 14,
-    paddingHorizontal: spacing.md,
     marginTop: spacing.sm,
   },
   // Empty state
@@ -289,7 +288,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   emptyButton: {
-    paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm + 4,
     borderRadius: 999,
   },
@@ -298,7 +296,6 @@ const styles = StyleSheet.create({
   },
   // Places list
   listContainer: {
-    paddingHorizontal: spacing.md,
     paddingVertical: spacing.lg,
     gap: spacing.md,
   },

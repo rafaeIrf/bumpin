@@ -4,13 +4,14 @@ import {
   DumbbellIcon,
   FlameIcon,
   HeartIcon,
+  MapIcon,
   MapPinIcon,
   SearchIcon,
   SlidersHorizontalIcon,
 } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
 import { useCustomBottomSheet } from "@/components/BottomSheetProvider/hooks";
-import { CategoryCard } from "@/components/category-card";
+import { CARD_COLORS, CategoryCard } from "@/components/category-card";
 import { ConnectionBottomSheet } from "@/components/connection-bottom-sheet";
 import PlaceSearchContent from "@/components/place-search-content";
 import { ScreenToolbar } from "@/components/screen-toolbar";
@@ -20,8 +21,9 @@ import { typography } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { SvgProps } from "react-native-svg";
 
 interface ActivePlace {
   id: string;
@@ -40,6 +42,8 @@ interface Category {
   iconColor: string;
   iconBgColor: string;
   types: string[];
+  color: string;
+  illustration?: React.ComponentType<SvgProps>;
 }
 
 const categories: Category[] = [
@@ -51,6 +55,8 @@ const categories: Category[] = [
     iconColor: "#FF6B35",
     iconBgColor: "rgba(41, 151, 255, 0.12)",
     types: ["bar", "night_club"],
+    color: CARD_COLORS.flameOrange,
+    illustration: MapIcon,
   },
   {
     id: "favorites",
@@ -60,6 +66,8 @@ const categories: Category[] = [
     iconColor: "#FFFFFF",
     iconBgColor: "rgba(41, 151, 255, 0.12)",
     types: ["bar", "night_club"],
+    color: CARD_COLORS.rosePulse,
+    illustration: MapIcon,
   },
   {
     id: "nightlife",
@@ -69,6 +77,8 @@ const categories: Category[] = [
     iconColor: "#FF8A33",
     iconBgColor: "rgba(255, 138, 51, 0.12)",
     types: ["bar", "night_club"],
+    color: CARD_COLORS.heatBurst,
+    illustration: MapIcon,
   },
   {
     id: "cafes",
@@ -78,6 +88,8 @@ const categories: Category[] = [
     iconColor: "#9B6C4A",
     iconBgColor: "rgba(155, 108, 74, 0.12)",
     types: ["cafe"],
+    color: CARD_COLORS.apricotPastel,
+    illustration: BeerIcon,
   },
   {
     id: "university",
@@ -87,6 +99,8 @@ const categories: Category[] = [
     iconColor: "#3DAAFF",
     iconBgColor: "rgba(61, 170, 255, 0.12)",
     types: ["university"],
+    color: CARD_COLORS.azurePop,
+    illustration: MapIcon,
   },
   {
     id: "fitness",
@@ -96,6 +110,8 @@ const categories: Category[] = [
     iconColor: "#1DB954",
     iconBgColor: "rgba(29, 185, 84, 0.12)",
     types: ["gym"],
+    color: CARD_COLORS.vitalGreen,
+    illustration: MapIcon,
   },
 ];
 
@@ -220,16 +236,26 @@ export default function HomeScreen() {
     <BaseTemplateScreen
       TopHeader={
         <ScreenToolbar
-          leftAction={{
-            icon: SlidersHorizontalIcon,
-            onClick: () => router.push("main/filters" as any),
-            ariaLabel: "Filtros",
-            color: colors.icon,
-          }}
-          title={"Explorar"}
-          titleIcon={MapPinIcon}
+          customTitleView={
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 2 }}
+            >
+              <MapPinIcon width={20} height={20} color={colors.accent} />
+              <ThemedText
+                style={{ ...typography.heading1, color: colors.accent }}
+              >
+                bumpti
+              </ThemedText>
+            </View>
+          }
           titleIconColor={colors.accent}
           rightActions={[
+            {
+              icon: SlidersHorizontalIcon,
+              onClick: () => router.push("main/filters" as any),
+              ariaLabel: "Filtros",
+              color: colors.icon,
+            },
             {
               icon: SearchIcon,
               onClick: handleOpenSearch,
@@ -258,24 +284,31 @@ export default function HomeScreen() {
         </Animated.View>
 
         {/* Categories List */}
-        <ThemedView style={styles.categoriesContainer}>
-          {categories.map((category, index) => {
-            const isSelected = selectedCategory === category.id;
-
+        <FlatList
+          data={categories}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          scrollEnabled={false}
+          renderItem={({ item, index }) => {
+            const isSelected = selectedCategory === item.id;
             return (
               <Animated.View
-                key={category.id}
-                entering={FadeInDown.delay(300 + index * 100).springify()}
+                entering={FadeInDown.delay(300 + index * 80).springify()}
+                style={styles.categoryItem}
               >
                 <CategoryCard
-                  category={category}
+                  category={item}
                   isSelected={isSelected}
-                  onClick={() => handleCategoryClick(category)}
+                  onClick={() => handleCategoryClick(item)}
+                  color={item.color}
+                  illustration={item.illustration}
                 />
               </Animated.View>
             );
-          })}
-        </ThemedView>
+          }}
+          columnWrapperStyle={styles.categoryColumnWrapper}
+          contentContainerStyle={styles.categoriesList}
+        />
 
         {/* Info Card */}
         <Animated.View entering={FadeInDown.delay(700).springify()}>
@@ -323,31 +356,13 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerSubtitle: {
-    fontSize: 14,
-    paddingHorizontal: 16,
-    marginTop: 8,
-  },
   section: {
     paddingTop: 24,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 16,
-    paddingHorizontal: 16,
-  },
-  sectionTitle: {
-    ...typography.subheading,
-    fontSize: 18,
-    fontWeight: "600",
   },
   emptyCard: {
     borderWidth: 1,
     borderRadius: 16,
     padding: 24,
-    marginHorizontal: 16,
   },
   emptyText: {
     textAlign: "center",
@@ -357,22 +372,27 @@ const styles = StyleSheet.create({
     ...typography.subheading,
     marginBottom: 8,
     marginTop: 16,
-    paddingHorizontal: 16,
   },
   mainSubtitle: {
     ...typography.caption,
-    paddingHorizontal: 16,
   },
-  categoriesContainer: {
-    paddingHorizontal: 16,
+  categoriesList: {
     paddingTop: 24,
-    gap: 16,
+    paddingBottom: 8,
+  },
+  categoryColumnWrapper: {
+    justifyContent: "flex-start",
+    marginBottom: 4,
+    gap: 4,
+  },
+  categoryItem: {
+    width: "48%",
+    maxWidth: "48%",
   },
   infoCard: {
     borderWidth: 1,
     borderRadius: 16,
     padding: 16,
-    marginHorizontal: 16,
     marginTop: 24,
   },
   infoContent: {

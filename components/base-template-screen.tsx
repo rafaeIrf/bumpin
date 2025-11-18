@@ -1,3 +1,4 @@
+import { spacing } from "@/constants/theme";
 import { StatusBar } from "expo-status-bar";
 import { ReactNode, cloneElement, isValidElement } from "react";
 import { RefreshControl, StyleSheet, View, ViewStyle } from "react-native";
@@ -161,6 +162,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 32,
+    paddingHorizontal: spacing.md,
   },
   contentWithBottomBar: {
     paddingBottom: 120, // Extra space for bottom bar

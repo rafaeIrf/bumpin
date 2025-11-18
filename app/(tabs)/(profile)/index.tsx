@@ -7,7 +7,15 @@ import {
   SettingsIcon,
 } from "@/assets/icons";
 import { BaseTemplateScreen } from "@/components/base-template-screen";
+import { useCustomBottomSheet } from "@/components/BottomSheetProvider/hooks";
+import {
+  PowerUpBottomSheet,
+  PowerUpOptionConfig,
+} from "@/components/power-up-bottom-sheet";
+import { ProfileActionCard } from "@/components/profile-action-card";
+import { ScreenToolbar } from "@/components/screen-toolbar";
 import { ThemedText } from "@/components/themed-text";
+import Button from "@/components/ui/button";
 import { spacing, typography } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-colors";
 import { t } from "@/modules/locales";
@@ -15,14 +23,53 @@ import { useAppSelector } from "@/modules/store/hooks";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { SvgProps } from "react-native-svg";
 
 interface BenefitRow {
   labelKey: string;
   free: boolean;
   premium: boolean;
 }
+
+type PowerUpType = "earlyCheckin" | "pings" | "turbo";
+
+interface PowerUpConfig {
+  icon: React.ComponentType<SvgProps>;
+  translationKey: string;
+  options: PowerUpOptionConfig[];
+}
+
+const POWER_UP_CONFIGS: Record<PowerUpType, PowerUpConfig> = {
+  earlyCheckin: {
+    icon: MapPinIcon,
+    translationKey: "screens.profile.powerUps.earlyCheckin",
+    options: [
+      { quantity: 1, id: "single" },
+      { quantity: 5, id: "bundle", badgeId: "popular", isHighlighted: true },
+      { quantity: 10, id: "max" },
+    ],
+  },
+  pings: {
+    icon: NavigationIcon,
+    translationKey: "screens.profile.powerUps.pings",
+    options: [
+      { quantity: 1, id: "single" },
+      { quantity: 5, id: "bundle", badgeId: "popular", isHighlighted: true },
+      { quantity: 10, id: "max" },
+    ],
+  },
+  turbo: {
+    icon: FlameIcon,
+    translationKey: "screens.profile.powerUps.turbo",
+    options: [
+      { quantity: 1, id: "single" },
+      { quantity: 3, id: "bundle", badgeId: "popular", isHighlighted: true },
+      { quantity: 6, id: "max" },
+    ],
+  },
+};
 
 const BENEFITS: BenefitRow[] = [
   {
@@ -75,6 +122,7 @@ const BENEFITS: BenefitRow[] = [
 export default function ProfileScreen() {
   const colors = useThemeColors();
   const router = useRouter();
+  const bottomSheet = useCustomBottomSheet();
   const { userData } = useAppSelector((state) => state.onboarding);
 
   const handleSettingsClick = () => {
@@ -87,19 +135,45 @@ export default function ProfileScreen() {
     console.log("Complete profile clicked");
   };
 
+  const handlePowerUpPurchase = (type: PowerUpType, quantity: number) => {
+    console.log("Power-up purchase", type, quantity);
+  };
+
+  const openPowerUpSheet = (type: PowerUpType) => {
+    if (!bottomSheet) return;
+    const config = POWER_UP_CONFIGS[type];
+
+    bottomSheet.expand({
+      content: () => (
+        <PowerUpBottomSheet
+          translationKey={config.translationKey}
+          icon={config.icon}
+          options={config.options}
+          onClose={() => bottomSheet.close()}
+          onPurchase={(quantity) => {
+            handlePowerUpPurchase(type, quantity);
+            bottomSheet.close();
+          }}
+          onUpgradeToPremium={() => {
+            bottomSheet.close();
+            handlePremiumClick();
+          }}
+        />
+      ),
+      draggable: true,
+    });
+  };
+
   const handleTurboClick = () => {
-    // TODO: Show Turbo paywall modal
-    console.log("Turbo+ clicked");
+    openPowerUpSheet("turbo");
   };
 
   const handlePingsClick = () => {
-    // TODO: Show Pings paywall modal
-    console.log("Pings clicked");
+    openPowerUpSheet("pings");
   };
 
   const handleEarlyCheckinClick = () => {
-    // TODO: Show Early Checkin paywall modal
-    console.log("Early Checkin clicked");
+    openPowerUpSheet("earlyCheckin");
   };
 
   const handlePremiumClick = () => {
@@ -109,350 +183,225 @@ export default function ProfileScreen() {
   const profilePhoto = userData.photoUris?.[0];
 
   return (
-    <BaseTemplateScreen>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Settings Button */}
-        <View style={styles.toolbar}>
-          <Pressable
-            onPress={handleSettingsClick}
-            style={({ pressed }) => [
-              styles.settingsButton,
-              {
-                backgroundColor: pressed ? colors.surface : "transparent",
-              },
-            ]}
-          >
-            <SettingsIcon width={20} height={20} color={colors.accent} />
-          </Pressable>
-        </View>
-
-        <View style={[styles.content, { paddingHorizontal: spacing.lg }]}>
-          {/* Profile Header */}
-          <Animated.View
-            entering={FadeInDown.duration(400)}
-            style={styles.profileHeader}
-          >
-            {/* Profile Photo */}
-            <View style={styles.photoContainer}>
-              <View style={[styles.photoRing, { borderColor: colors.accent }]}>
-                {profilePhoto ? (
-                  <Image source={{ uri: profilePhoto }} style={styles.photo} />
-                ) : (
-                  <View
-                    style={[
-                      styles.photoPlaceholder,
-                      { backgroundColor: colors.surface },
-                    ]}
-                  />
-                )}
-              </View>
-            </View>
-
-            {/* Profile Info */}
-            <View style={styles.profileInfo}>
-              <ThemedText
-                style={[typography.subheading, { color: colors.text }]}
-              >
-                {userData.name || t("screens.profile.title")}
-                {userData.age
-                  ? `, ${t("screens.profile.yearsOld", { age: userData.age })}`
-                  : ""}
-              </ThemedText>
-
-              <ThemedText
-                style={[typography.caption, { color: colors.textSecondary }]}
-              >
-                {t("screens.profile.premium.subtitle")}
-              </ThemedText>
-
-              <Pressable
-                onPress={handleCompleteProfile}
-                style={({ pressed }) => [
-                  styles.profileButton,
-                  {
-                    backgroundColor: pressed ? "#1D7FD9" : colors.accent,
-                  },
-                ]}
-              >
-                <ThemedText
-                  style={[
-                    typography.body,
-                    { fontWeight: "600", color: "#FFFFFF" },
-                  ]}
-                >
-                  {t("screens.profile.completeProfile")}
-                </ThemedText>
-              </Pressable>
-            </View>
-          </Animated.View>
-
-          {/* Action Cards */}
-          <Animated.View
-            entering={FadeInDown.duration(400).delay(100)}
-            style={styles.actionCardsContainer}
-          >
-            {/* Turbo+ Card */}
-            <Pressable onPress={handleTurboClick} style={styles.actionCard}>
-              <LinearGradient
-                colors={["#1C1C1C", "#0F0F0F"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.actionCardGradient}
-              >
+    <BaseTemplateScreen
+      TopHeader={
+        <ScreenToolbar
+          title={t("screens.profile.title")}
+          rightActions={[
+            {
+              icon: SettingsIcon,
+              onClick: handleSettingsClick,
+              ariaLabel: t("screens.profile.settings"),
+            },
+          ]}
+        />
+      }
+    >
+      <View style={[styles.content]}>
+        {/* Profile Header */}
+        <Animated.View
+          entering={FadeInDown.duration(400)}
+          style={styles.profileHeader}
+        >
+          {/* Profile Photo */}
+          <View style={styles.photoContainer}>
+            <View style={[styles.photoRing, { borderColor: colors.accent }]}>
+              {profilePhoto ? (
+                <Image source={{ uri: profilePhoto }} style={styles.photo} />
+              ) : (
                 <View
                   style={[
-                    styles.actionCardIcon,
-                    { backgroundColor: "rgba(41, 151, 255, 0.15)" },
+                    styles.photoPlaceholder,
+                    { backgroundColor: colors.surface },
                   ]}
-                >
-                  <FlameIcon width={20} height={20} color={colors.accent} />
-                </View>
-                <ThemedText
-                  style={[typography.caption, { color: colors.text }]}
-                >
-                  {t("screens.profile.turbo.title")}
-                </ThemedText>
-              </LinearGradient>
-            </Pressable>
+                />
+              )}
+            </View>
+          </View>
 
-            {/* Pings Card */}
-            <Pressable onPress={handlePingsClick} style={styles.actionCard}>
-              <LinearGradient
-                colors={["#1C1C1C", "#0F0F0F"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.actionCardGradient}
-              >
-                <View
-                  style={[
-                    styles.actionCardIcon,
-                    { backgroundColor: "rgba(41, 151, 255, 0.15)" },
-                  ]}
-                >
-                  <NavigationIcon
-                    width={20}
-                    height={20}
-                    color={colors.accent}
-                  />
-                </View>
-                <ThemedText
-                  style={[typography.caption, { color: colors.text }]}
-                >
-                  {t("screens.profile.pings.title")}
-                </ThemedText>
-              </LinearGradient>
-            </Pressable>
+          {/* Profile Info */}
+          <View style={styles.profileInfo}>
+            <ThemedText style={[typography.body1, { color: colors.text }]}>
+              {userData.name || t("screens.profile.title")}
+              {userData.age ? `, ${userData.age}` : ""}
+            </ThemedText>
 
-            {/* Early Checkin Card */}
-            <Pressable
-              onPress={handleEarlyCheckinClick}
-              style={styles.actionCard}
+            <Button
+              onPress={handleCompleteProfile}
+              size="sm"
+              style={styles.profileButton}
+              label={t("screens.profile.completeProfile")}
+            />
+          </View>
+        </Animated.View>
+
+        {/* Action Cards */}
+        <Animated.View
+          entering={FadeInDown.duration(400).delay(100)}
+          style={styles.actionCardsContainer}
+        >
+          <ProfileActionCard
+            icon={FlameIcon}
+            titleKey={t("screens.profile.turbo.title")}
+            onPress={handleTurboClick}
+          />
+          <ProfileActionCard
+            icon={NavigationIcon}
+            titleKey={t("screens.profile.pings.title")}
+            onPress={handlePingsClick}
+          />
+          <ProfileActionCard
+            icon={MapPinIcon}
+            titleKey={t("screens.profile.earlyCheckin.title")}
+            onPress={handleEarlyCheckinClick}
+          />
+        </Animated.View>
+
+        {/* Premium Hero Card */}
+        <Animated.View entering={FadeInDown.duration(400).delay(200)}>
+          <Pressable onPress={handlePremiumClick}>
+            <LinearGradient
+              colors={["#2997FF", "#0A0A0A"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.premiumCard}
             >
-              <LinearGradient
-                colors={["#1C1C1C", "#0F0F0F"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.actionCardGradient}
-              >
-                <View
-                  style={[
-                    styles.actionCardIcon,
-                    { backgroundColor: "rgba(41, 151, 255, 0.15)" },
-                  ]}
-                >
-                  <MapPinIcon width={20} height={20} color={colors.accent} />
-                </View>
-                <ThemedText
-                  style={[typography.caption, { color: colors.text }]}
-                >
-                  {t("screens.profile.earlyCheckin.title")}
-                </ThemedText>
-              </LinearGradient>
-            </Pressable>
-          </Animated.View>
-
-          {/* Premium Hero Card */}
-          <Animated.View entering={FadeInDown.duration(400).delay(200)}>
-            <Pressable onPress={handlePremiumClick}>
-              <LinearGradient
-                colors={["#2997FF", "#0A0A0A"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.premiumCard}
-              >
+              <View style={styles.premiumHeader}>
                 <View
                   style={[
                     styles.premiumIconContainer,
                     { backgroundColor: "rgba(255, 255, 255, 0.15)" },
                   ]}
                 >
-                  <CrownIcon width={24} height={24} color="#FFFFFF" />
+                  <CrownIcon width={24} height={24} color={colors.text} />
                 </View>
-
-                <ThemedText style={[typography.heading, { color: "#FFFFFF" }]}>
-                  {t("screens.profile.premium.title")}
-                </ThemedText>
-
-                <ThemedText
-                  style={[
-                    typography.body,
-                    { color: "rgba(255, 255, 255, 0.8)" },
-                  ]}
-                >
-                  {t("screens.profile.premium.description")}
-                </ThemedText>
-
-                <View style={styles.premiumButton}>
+                <View style={styles.premiumTextContainer}>
                   <ThemedText
-                    style={[
-                      typography.body,
-                      { fontWeight: "600", color: "#FFFFFF" },
-                    ]}
+                    style={[typography.body1, { color: colors.text }]}
                   >
-                    {t("screens.profile.premium.cta")}
+                    {t("screens.profile.premium.title")}
+                  </ThemedText>
+
+                  <ThemedText
+                    style={[typography.caption, { color: colors.text }]}
+                  >
+                    {t("screens.profile.premium.description")}
                   </ThemedText>
                 </View>
-              </LinearGradient>
-            </Pressable>
-          </Animated.View>
-
-          {/* Benefits Table */}
-          <Animated.View entering={FadeInDown.duration(400).delay(300)}>
-            <LinearGradient
-              colors={["#1C1C1C", "#0F0F0F"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.benefitsCard}
-            >
-              <ThemedText style={[typography.body, { color: colors.text }]}>
-                {t("screens.profile.benefits.title")}
-              </ThemedText>
-
-              {/* Table Header */}
-              <View
-                style={[
-                  styles.tableHeader,
-                  { borderBottomColor: colors.border },
-                ]}
-              >
-                <View style={styles.tableHeaderCell} />
-                <ThemedText
-                  style={[
-                    typography.caption,
-                    {
-                      color: colors.textSecondary,
-                      flex: 1,
-                      textAlign: "center",
-                    },
-                  ]}
-                >
-                  {t("screens.profile.benefits.free")}
-                </ThemedText>
-                <ThemedText
-                  style={[
-                    typography.caption,
-                    { color: colors.accent, flex: 1, textAlign: "center" },
-                  ]}
-                >
-                  {t("screens.profile.benefits.premium")}
-                </ThemedText>
               </View>
-
-              {/* Table Rows */}
-              <View style={styles.tableBody}>
-                {BENEFITS.map((benefit) => (
-                  <View key={benefit.labelKey} style={styles.tableRow}>
-                    <ThemedText
-                      style={[
-                        typography.caption,
-                        { color: colors.text, flex: 2 },
-                      ]}
-                    >
-                      {t(benefit.labelKey)}
-                    </ThemedText>
-                    <View style={styles.tableCell}>
-                      {benefit.free ? (
-                        <CheckIcon
-                          width={16}
-                          height={16}
-                          color={colors.accent}
-                        />
-                      ) : (
-                        <View style={styles.iconPlaceholder}>
-                          <ThemedText
-                            style={[
-                              typography.body,
-                              { color: colors.textSecondary },
-                            ]}
-                          >
-                            —
-                          </ThemedText>
-                        </View>
-                      )}
-                    </View>
-                    <View style={styles.tableCell}>
-                      {benefit.premium ? (
-                        <CheckIcon
-                          width={16}
-                          height={16}
-                          color={colors.accent}
-                        />
-                      ) : (
-                        <View style={styles.iconPlaceholder}>
-                          <ThemedText
-                            style={[
-                              typography.body,
-                              { color: colors.textSecondary },
-                            ]}
-                          >
-                            —
-                          </ThemedText>
-                        </View>
-                      )}
-                    </View>
-                  </View>
-                ))}
+              <View style={styles.premiumButton}>
+                <ThemedText
+                  style={[typography.captionBold, { color: colors.text }]}
+                >
+                  {t("screens.profile.premium.cta")}
+                </ThemedText>
               </View>
             </LinearGradient>
-          </Animated.View>
-        </View>
-      </ScrollView>
+          </Pressable>
+        </Animated.View>
+
+        {/* Benefits Table */}
+        <Animated.View entering={FadeInDown.duration(400).delay(300)}>
+          <LinearGradient
+            colors={["#1C1C1C", "#0F0F0F"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.benefitsCard}
+          >
+            <ThemedText style={[typography.body, { color: colors.text }]}>
+              {t("screens.profile.benefits.title")}
+            </ThemedText>
+
+            {/* Table Header */}
+            <View
+              style={[styles.tableHeader, { borderBottomColor: colors.border }]}
+            >
+              <View style={styles.tableHeaderCell} />
+              <ThemedText
+                style={[
+                  typography.caption,
+                  {
+                    color: colors.textSecondary,
+                    flex: 1,
+                    textAlign: "center",
+                  },
+                ]}
+              >
+                {t("screens.profile.benefits.free")}
+              </ThemedText>
+              <ThemedText
+                style={[
+                  typography.caption,
+                  { color: colors.accent, flex: 1, textAlign: "center" },
+                ]}
+              >
+                {t("screens.profile.benefits.premium")}
+              </ThemedText>
+            </View>
+
+            {/* Table Rows */}
+            <View style={styles.tableBody}>
+              {BENEFITS.map((benefit) => (
+                <View key={benefit.labelKey} style={styles.tableRow}>
+                  <ThemedText
+                    style={[
+                      typography.caption,
+                      { color: colors.text, flex: 2 },
+                    ]}
+                  >
+                    {t(benefit.labelKey)}
+                  </ThemedText>
+                  <View style={styles.tableCell}>
+                    {benefit.free ? (
+                      <CheckIcon width={16} height={16} color={colors.accent} />
+                    ) : (
+                      <View style={styles.iconPlaceholder}>
+                        <ThemedText
+                          style={[
+                            typography.body,
+                            { color: colors.textSecondary },
+                          ]}
+                        >
+                          —
+                        </ThemedText>
+                      </View>
+                    )}
+                  </View>
+                  <View style={styles.tableCell}>
+                    {benefit.premium ? (
+                      <CheckIcon width={16} height={16} color={colors.accent} />
+                    ) : (
+                      <View style={styles.iconPlaceholder}>
+                        <ThemedText
+                          style={[
+                            typography.body,
+                            { color: colors.textSecondary },
+                          ]}
+                        >
+                          —
+                        </ThemedText>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              ))}
+            </View>
+          </LinearGradient>
+        </Animated.View>
+      </View>
     </BaseTemplateScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: spacing.xxl,
-  },
-  toolbar: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.sm,
-  },
-  settingsButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   content: {
     gap: spacing.lg,
+    paddingTop: spacing.md,
   },
   profileHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.lg,
+    gap: spacing.md,
   },
   photoContainer: {
     flexShrink: 0,
@@ -478,48 +427,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profileButton: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    borderRadius: 20,
     alignSelf: "flex-start",
-    shadowColor: "#2997FF",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    marginTop: spacing.sm,
   },
   actionCardsContainer: {
     flexDirection: "row",
     gap: spacing.md,
   },
-  actionCard: {
-    flex: 1,
-    height: 90,
-  },
-  actionCardGradient: {
-    flex: 1,
-    borderRadius: 14,
-    padding: spacing.md,
-    shadowColor: "#2997FF",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    elevation: 5,
-    borderWidth: 1,
-    borderColor: "rgba(41, 151, 255, 0.2)",
-    justifyContent: "space-between",
-  },
-  actionCardIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   premiumCard: {
     borderRadius: 16,
     padding: spacing.lg,
     minHeight: 140,
+  },
+  premiumHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.md,
+    marginBottom: spacing.md,
+  },
+  premiumTextContainer: {
+    flex: 1,
+    gap: spacing.xs,
   },
   premiumIconContainer: {
     width: 44,
@@ -527,7 +455,6 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: spacing.md,
   },
   premiumButton: {
     paddingHorizontal: spacing.lg,

@@ -328,7 +328,7 @@ export default function PremiumPaywallScreen() {
             >
               <ThemedText
                 style={[
-                  typography.bodyBold,
+                  typography.body1,
                   { color: "#FFFFFF", fontWeight: "600" },
                 ]}
               >
